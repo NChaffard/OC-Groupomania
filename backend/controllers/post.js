@@ -1,107 +1,68 @@
 // Import dependancies
 const mysql = require('mysql');
 const fs = require('fs');
-// Connexion to database
-const pool = mysql.createPool({
-    connectionLimit: 10,
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
-  });
+const db = require('../utils/db');
+
+// -------------------Database Functions-----------------------------------------------
+async function create(userId, text){
+    await db.create(userId, text);    
+}
+
+async function select(id = -1){
+    return await db.select(id);      
+}
+
+async function update(id, text){
+    await db.update(id, text);
+}
+
+async function deleteOne(id){
+    await db.delete(id);
+}
+
+// ----------------Ends of functions---------------------------------------
 
 // Create post
 exports.createPost = (req, res, next) => {
-        // Prepare query
-        let insertQuery = 'INSERT INTO ?? (??,??) VALUES (?,?)';
-        let query = mysql.format(insertQuery,["posts", "userId", "text", req.body.userId, req.body.text]);
-        // Then save the user in database
-        pool.query(query,(err, response) => {
-        if (err) {
-            return res.status(400).json({message: "An error occurred !!"});
-        }
-        // If the post is created, validate the query and show validation message
-        res.status(201).json({message: "Post created successfully !!"});
-        });
-
+    create(req.body.userId, req.body.text).then(()=>{res.status(201).json({message: "Post created successfully !!"});}).catch((error)=>{res.status(400).json({message: " error: " + error})});
 };
 
-// Get one post
-exports.getOnePost = (req, res, next) => {
-    // Prepare query
-    let selectQuery = 'SELECT * FROM ?? WHERE ?? = ?';
-    let query = mysql.format(selectQuery, ["posts", "id", req.params.id]);
-    pool.query(query,(err, response) => {
-        if(err) {
-            return res.status(400).json({message: "An error occurred !!"});
-        }
-        if(response == ''){
-            return res.status(400).json({message: "Post doesn't exist !!"});
-        }
-        res.status(200).json(response);
-    });
-};
-
-// Get all posts
-exports.getAllPosts = (req, res, next) => {
-    // Prepare query
-    let selectQuery = 'SELECT * FROM ?? ORDER BY ??';
-    let query = mysql.format(selectQuery, ["posts", "time_stamp"]);
-    pool.query(query,(err, response) => {
-        if(err) {
-            return res.status(400).json({message: "An error occurred !!"});
-        }
-        if (response == ''){
-            return res.status(400).json({message: "There is no posts !!"});
-        }
-        res.status(200).json(response);
-    });
+// Read posts
+exports.getPosts = (req, res, next) => {
+    // If req.params.id doesn't exists, return all posts   
+    select(req.params.id).then((response)=>{res.status(200).json(response)}).catch((error)=>{res.status(400).json({message: " error: " + error})});
 };
 
 // Update a post
 exports.updatePost = (req, res, next) => {
-    // get userid of the post to update
-    let selectQuery = 'SELECT ?? FROM ?? WHERE ?? = ?';
-    let uidQuery = mysql.format(selectQuery, ["userId", "posts", "id", req.params.id]);
-    pool.query(uidQuery,(err, response) => {
-        if (err) { return res.status(400).json({message: "An error occurred !!"}); }
+    // // get userid of the post to update
+    select(req.params.id)
+    .then((response)=>{
+        res.status(200);
         // Verify if the user who wants to modify the post is the one who created it
-        if (response == ''){return res.status(400).json({message: "Post doesn't exist !!"});}
         if ( response[0].userId === req.auth.userId){
-            // Prepare query
-            let updateQuery = 'UPDATE ?? SET ?? = ? WHERE ?? = ?';
-            let query = mysql.format(updateQuery, ["posts", "text", req.body.text, "id", req.params.id]);
-            pool.query(query,(err, response) => {
-                if (err) { return res.status(400).json({message: "An error occurred !!"}); }
-                // If the post is updated, validate the query and show validation message
-                res.status(201).json({message: "Post updated successfully !!"});
-            });
+            update(req.params.id, req.body.text).then(()=>{res.status(201).json({message: "Post updated successfully !!"});}).catch((error)=>{res.status(400).json({message: " error: " + error})});
         } else {
             res.status(400).json({ message: 'Unauthorized request !'});
         }
+    })
+    .catch((error)=>{res.status(400).json({ message: " error: " + error })
     });
-
 };
 
 // Delete a post
 exports.deletePost = (req, res, next) => {
-    // get userid of the post to update
-    let selectQuery = 'SELECT ?? FROM ?? WHERE ?? = ?';
-    let uidQuery = mysql.format(selectQuery, ["userId", "posts", "id", req.params.id]);
-    pool.query(uidQuery,(err, response) => {
-        if (err) { return res.status(400).json({message: "An error occurred !!"}); }
+    // // get userid of the post to delete
+    select(req.params.id)
+    .then((response)=>{
+        res.status(200);
         // Verify if the user who wants to modify the post is the one who created it
         if ( response[0].userId === req.auth.userId){
-            // Prepare query
-            let deleteQuery = 'DELETE FROM ?? WHERE ?? = ?';
-            let query = mysql.format(deleteQuery, ["posts", "id", req.params.id]);
-            pool.query(query,(err, response) => {
-                if (err){ return res.status(400).json({message: "An error occurred !!"}); }
-                    // If the post is deleted, validate the query and show validation message
-                    res.status(201).json({message: "Post deleted successfully !!"});
-                });
+            deleteOne(req.params.id).then(()=>{res.status(201).json({message: "Post deleted successfully !!"});}).catch((error)=>{res.status(400).json({message: " error: " + error})});
         } else {
             res.status(400).json({ message: 'Unauthorized request !'});
-        }     
-    }); 
+        }
+    })
+    .catch((error)=>{res.status(400).json({ message: " error: " + error })
+    });
 };
