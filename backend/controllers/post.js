@@ -4,12 +4,9 @@ const fs = require('fs');
 const db = require('../utils/db');
 
 // -------------------Database Functions-----------------------------------------------
-
-
 async function dbQuery(queryType, args){
-    return await db.dbQuery(queryType, args);
+    return await db.dbQuery(queryType, table = 'posts', args);
 }
-
 // ----------------Ends of functions---------------------------------------
 
 // Create post
