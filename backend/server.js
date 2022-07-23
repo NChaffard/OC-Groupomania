@@ -19,7 +19,7 @@ const normalizePort = val => {
   };
   
   // Set port
-  const port = normalizePort(process.env.PORT || '3000');
+  const port = normalizePort(process.env.PORT || '3333');
   app.set('port', port);
   
   // Error handling

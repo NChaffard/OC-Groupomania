@@ -9,19 +9,15 @@ module.exports = (req, res, next) => {
     const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
     // Get the userId from decoded token
     const userId = decodedToken.userId;
-    // Keep userId for later if we want to delete a sauce
+    // Keep userId for later
     req.auth = { userId };
-    
-    if (req.body.userId) {
-      if (req.body.userId !== userId) {
-        // If userId is not the same as one in the token, throw error
-        throw 'Invalid user ID';
-      } else {
-        // Else go next
-        next();
-      }
-    } else {
+
+    if (req.body.userId && req.body.userId !== userId) {
+      // If userId from the post is not the same as userId in the token, throw error
       throw 'Invalid user ID';
+    } else {
+      // Else go next
+      next();
     }
   } catch {
     res.status(401).json({

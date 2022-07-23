@@ -8,100 +8,104 @@ module.exports = {
         let queryBase;
         let query;
         if (queryType == 'select') {
-            if (table == "users"){
-                if (args.email){
+            if (table == "users") {
+                if (args.email) {
                     queryBase = 'SELECT * FROM ?? WHERE ?? = ?';
                     query = mysql.format(queryBase, [table, "email", args.email]);
                 }
+                else if (args.id) {
+                    queryBase = 'SELECT * FROM ?? WHERE ?? = ?';
+                    query = mysql.format(queryBase, [table, "id", args.id]);
+                }
                 else {
-                    return {status: 400, message: "The requested email is not valid !!"}; 
+                    return { status: 400, message: "The requested email is not valid !!" };
                 }
             }
-            else if (table == "posts"){
-        
+            else if (table == "posts") {
+
                 if (args.id == -1) {
-                    queryBase = 'SELECT * FROM ?? ORDER BY ??';
-                    query = mysql.format(queryBase, [table, "time_stamp"]);
+                    queryBase = 'SELECT ??, ??, ??, ??, ??, ??, ??, ?? FROM ?? LEFT JOIN ?? ON ?? = ?? ORDER BY ?? DESC';
+                    query = mysql.format(queryBase, ["posts.id", "posts.text", "posts.imageUrl", "posts.time_stamp", "posts.likes", "posts.dislikes", "posts.userId", "users.name", table, "users", "users.id", "posts.userId", "time_stamp"]);
                 }
-                else if (!isNaN(args.id) && args.userId && args.like){
+                else if (!isNaN(args.id) && args.userId && args.like) {
                     let jsonTarget;
-                    if( args.like == 1){
+                    if (args.like == 1) {
                         jsonTarget = "likes";
                     }
-                    if ( args.like == -1){
+                    if (args.like == -1) {
                         jsonTarget = "dislikes";
                     }
-                    const userId = '["'+args.userId+'"]';
+                    const userId = '["' + args.userId + '"]';
                     queryBase = 'SELECT * FROM ?? WHERE ?? = ? AND JSON_CONTAINS(??, ?,?)';
                     query = mysql.format(queryBase, [table, "id", args.id, jsonTarget, userId, "$"]);
-                } 
+                }
                 else if (!isNaN(args.id)) {
                     queryBase = 'SELECT * FROM ?? WHERE ?? = ?';
-                    query = mysql.format(queryBase, [table, "id", args.id]);              
+                    query = mysql.format(queryBase, [table, "id", args.id]);
                 }
-                else { 
-                    return {status: 400, message: "The requested id is not valid !!"}; 
+                else {
+                    return { status: 400, message: "The requested id is not valid !!" };
                 }
             }
             else {
-                return {status: 400, message: "The requested table is not valid !!"}; 
+                return { status: 400, message: "The requested table is not valid !!" };
             }
         }
         if (queryType == 'create') {
-            if (table == 'users'){
+            if (table == 'users') {
                 queryBase = 'INSERT INTO ?? (??,??,??) VALUES (?,?,?)';
-                query = mysql.format(queryBase,[table, "email", "name", "password", args.email, args.name, args.password]);    
+                query = mysql.format(queryBase, [table, "email", "name", "password", args.email, args.name, args.password]);
             }
-            else if (table == 'posts'){
-                const JSON_ARRAY = {toSqlString: function() { return 'JSON_ARRAY()';}};
+            else if (table == 'posts') {
+                const JSON_ARRAY = { toSqlString: function () { return 'JSON_ARRAY()'; } };
                 queryBase = 'INSERT INTO ?? (??,??,??,??,??) VALUES (?,?,?,?,?)';
-                query = mysql.format( queryBase,[ table,"userId", "text", "likes", "dislikes", "imageUrl", args.userId, args.text, JSON_ARRAY, JSON_ARRAY, args.imageUrl ] );
+                query = mysql.format(queryBase, [table, "userId", "text", "likes", "dislikes", "imageUrl", args.userId, args.text, JSON_ARRAY, JSON_ARRAY, args.imageUrl]);
             }
             else {
-                return {status: 400, message: "The requested table is not valid !!"}; 
+                return { status: 400, message: "The requested table is not valid !!" };
             }
         }
-        if ( queryType == 'update' ) {
-            if (table == "posts"){
-                if (args.id && args.likeId){
+        if (queryType == 'update') {
+            if (table == "posts") {
+                if (args.id && args.likeId) {
                     // Delete like
-                    const likeId = '$['+args.likeId+']';
+                    const likeId = '$[' + args.likeId + ']';
                     queryBase = 'UPDATE ?? SET ??= JSON_REMOVE(??, ?) WHERE ?? = ?';
-                    query = mysql.format( queryBase,[ table,"likes", "likes", likeId, "id", args.id]);
+                    query = mysql.format(queryBase, [table, "likes", "likes", likeId, "id", args.id]);
                 }
-                else if (args.dislikeId){
+                else if (args.dislikeId) {
                     // Delete dislike
-                    const dislikeId = '$['+args.dislikeId+']';
+                    const dislikeId = '$[' + args.dislikeId + ']';
                     queryBase = 'UPDATE ?? SET ??= JSON_REMOVE(??, ?) WHERE ?? = ?';
-                    query = mysql.format( queryBase,[ table,"dislikes", "dislikes", dislikeId, "id", args.id]);
+                    query = mysql.format(queryBase, [table, "dislikes", "dislikes", dislikeId, "id", args.id]);
                 }
                 else if (args.like && args.userId) {
-                const userId = args.userId.toString();
-                    if (args.like == 1){
+                    const userId = args.userId.toString();
+                    if (args.like == 1) {
                         // Add like
                         queryBase = 'UPDATE ?? SET ?? = JSON_ARRAY_APPEND(??, ?, ?) WHERE ?? = ?';
-                        query = mysql.format( queryBase,[ table,"likes", "likes","$", userId, "id", args.id ]);
+                        query = mysql.format(queryBase, [table, "likes", "likes", "$", userId, "id", args.id]);
                     }
-                    if (args.like == -1){
+                    if (args.like == -1) {
                         // Add dislike
                         queryBase = 'UPDATE ?? SET ?? = JSON_ARRAY_APPEND(??, ?, ?) WHERE ?? = ?';
-                        query = mysql.format( queryBase,[ table,"dislikes", "dislikes","$",userId, "id", args.id ]);
+                        query = mysql.format(queryBase, [table, "dislikes", "dislikes", "$", userId, "id", args.id]);
                     }
                 }
-                else if (args.id && args.text){
+                else if (args.id && args.text) {
                     queryBase = 'UPDATE ?? SET ?? = ? WHERE ?? = ?';
                     query = mysql.format(queryBase, [table, "text", args.text, "id", args.id]);
                 }
-                else { 
-                    return {message: "The requested id is not valid !!"}; 
+                else {
+                    return { message: "The requested id is not valid !!" };
                 }
             }
-            else if (table == "users"){
+            else if (table == "users") {
                 queryBase = "UPDATE ?? SET ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?";
                 query = mysql.format(queryBase, [table, "email", args.email, "name", args.name, "password", args.password, "id", args.id]);
             }
             else {
-                return {status: 400, message: "The requested table is not valid !!"}; 
+                return { status: 400, message: "The requested table is not valid !!" };
             }
         }
         if (queryType == 'delete') {
@@ -109,22 +113,22 @@ module.exports = {
                 queryBase = 'DELETE FROM ?? WHERE ?? = ?';
                 query = mysql.format(queryBase, [table, "id", args.id]);
             }
-            else if (table == "users"){
+            else if (table == "users") {
                 queryBase = "DELETE FROM ?? WHERE ?? = ?";
                 query = mysql.format(queryBase, [table, "id", args.id]);
             }
             else {
-                return {status: 400, message: "The requested table is not valid !!"}; 
+                return { status: 400, message: "The requested table is not valid !!" };
             }
         }
         return new Promise((resolve, reject) => {
-            pool.query(query,(err, response) => {
+            pool.query(query, (err, response) => {
                 if (err) {
                     reject('An error occured !!');
                 }
-                
-                resolve (response);
-            })     
+
+                resolve(response);
+            })
         });
     }
 }

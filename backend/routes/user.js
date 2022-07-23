@@ -8,6 +8,7 @@ const userCtrl = require('../controllers/user');
 // Create routes
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
+router.get('/me', auth, userCtrl.me);
 router.put('/update', auth, userCtrl.update);
 router.delete('/delete', auth, userCtrl.delete);
 
