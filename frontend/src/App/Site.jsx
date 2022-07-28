@@ -3,7 +3,9 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { usePosts } from '../hooks/posts';
 import { Posts } from './Posts/Posts';
-import { CreatePostForm, UpdatePostForm } from './Posts/PostForm'
+import { CreatePostForm, UpdatePostForm } from './Posts/PostForm';
+import logo from '../assets/icon-left-font-monochrome-white.svg';
+import '../scss/site.scss';
 
 export function Site() {
 
@@ -16,6 +18,7 @@ export function Site() {
         deletePost,
         createPost,
         updatePost,
+        likePost
     } = usePosts()
     const handleCreate = async function (data) {
         await createPost(data)
@@ -28,7 +31,8 @@ export function Site() {
 
     let content = null
     if (page === 'posts') {
-        content = <Posts posts={posts} onDelete={deletePost} onUpdate={setPost} />
+
+        content = <Posts posts={posts} onDelete={deletePost} onUpdate={setPost} onLike={likePost} />
     }
     else if (page === 'addPost') {
         content = <CreatePostForm onSubmit={handleCreate} />
@@ -60,32 +64,35 @@ export function Site() {
 
     return <>
         <NavBar currentPage={page} onClick={setPage} />
-        {content}
+        <main className="main">
+            {content}
+        </main>
     </>
 }
 
 function NavBar({ currentPage, onClick }) {
 
     const navClass = function (page) {
-        let className = 'nav-item'
+        let className = 'nav-list__item'
         if (page === currentPage) {
-            className = 'nav-item active'
+            className = 'nav-list__item_active'
         }
         return className;
     }
-    return <nav className="navbar">
-        <a href="#home" className='navbar-brand'>Groupomania</a>
-        <ul className="nav-list">
-            <li className={navClass('posts')}>
-                <a href="#posts" className="nav-link" onClick={() => onClick('posts')}>Posts</a>
-            </li>
-            <li className={navClass('addPost')}>
-                <a href="#addPost" className="nav-link" onClick={() => onClick('addPost')}>Ajouter</a>
-            </li>
-            <li className={navClass('logout')}>
-                <a href="#logout" className="nav-link" onClick={() => onClick('logout')}>Se déconnecter</a>
-            </li>
-
-        </ul>
-    </nav>
+    return <header className="header">
+        <nav className="nav">
+            <img className="nav__logo" src={logo} alt="Logo Groupomania" />
+            <ul className="nav-list">
+                <li className={navClass('posts')}>
+                    <a href="#posts" className="nav-list__link" onClick={() => onClick('posts')}>Posts</a>
+                </li>
+                <li className={navClass('addPost')}>
+                    <a href="#addPost" className="nav-list__link" onClick={() => onClick('addPost')}>Ajouter</a>
+                </li>
+                <li className={navClass('logout')}>
+                    <a href="#logout" className="nav-list__link" onClick={() => onClick('logout')}>Se déconnecter</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
 }

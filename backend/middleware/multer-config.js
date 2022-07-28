@@ -1,6 +1,5 @@
 // Import dependancies
 const multer = require('multer');
-
 // MIME_TYPES dictionary
 const MIME_TYPES = {
   'image/jpg': 'jpg',
@@ -26,4 +25,4 @@ const storage = multer.diskStorage({
   }
 });
 // Export middleware with destination and filename for a single image file 
-module.exports = multer({storage}).single('image');
+module.exports = multer({ storage }).single('image');

@@ -8,10 +8,10 @@ const multer = require('../middleware/multer-config');
 const postCtrl = require('../controllers/post');
 // Create routes
 router.post('/', auth, multer, postCtrl.createPost);
-router.get('/:id', auth,postCtrl.getPosts);
-router.get('/', auth,postCtrl.getPosts);
+router.get('/:id', auth, postCtrl.getPosts);
+router.get('/', auth, postCtrl.getPosts);
 router.put('/:id', auth, multer, postCtrl.updatePost);
-router.put('/:id/like',auth, postCtrl.likePost);
-router.delete('/:id', auth,postCtrl.deletePost);
+router.put('/:id/like', auth, multer, postCtrl.likePost);
+router.delete('/:id', auth, postCtrl.deletePost);
 
 module.exports = router;

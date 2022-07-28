@@ -25,7 +25,8 @@ export async function apiFetch(endpoint, options = {}) {
         headers: {
             'authorization': token,
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/json'
+            // 'Content-Type': 'multipart/form-data;boundary=???'
         },
         ...options
     })

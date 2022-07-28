@@ -1,0 +1,31 @@
+@import './utils/variables.scss';
+
+.main {
+    display: flex;
+    justify-content: center;
+    background-color: $secondary;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    background-color: #fd2d01;
+    padding: 10px;
+    height: 100px;
+
+    &-list {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 1.4em;
+
+        &__item {
+            margin: 0 20px 0 20px;
+
+            &_active a {
+                color: #4E5166;
+            }
+        }
+    }
+}

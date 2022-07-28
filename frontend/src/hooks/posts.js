@@ -45,20 +45,29 @@ export function usePosts() {
             dispatch({ type: 'DELETE_POST', payload: post })
         },
         createPost: async function (post) {
+
             const newPost = await apiFetch('/post', {
                 method: 'POST',
-                body: JSON.stringify({
-                    "text": post.text
-                })
+                body: post
             })
+
             dispatch({ type: 'CREATE_POST', payload: newPost })
         },
         updatePost: async function (post) {
-            const newPost = await apiFetch('/post/' + post.id, {
+            console.log(post.get('id'))
+            const newPost = await apiFetch('/post/' + post.get('id'), {
                 method: 'PUT',
-                body: JSON.stringify({
-                    "text": post.text
-                })
+                body: post
+            })
+            dispatch({ type: 'UPDATE_POST', payload: newPost })
+        },
+        likePost: async function (post, like) {
+            const data = new FormData()
+            data.append('like', like)
+
+            const newPost = await apiFetch('/post/' + post.id + '/like', {
+                method: 'PUT',
+                body: data
             })
             dispatch({ type: 'UPDATE_POST', payload: newPost })
         }

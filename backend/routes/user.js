@@ -3,13 +3,14 @@ const express = require('express');
 const router = express.Router();
 // Import middlewares
 const auth = require('../middleware/auth');
+const multer = require('../middleware/multer-config');
 // Import user controller
 const userCtrl = require('../controllers/user');
 // Create routes
-router.post('/signup', userCtrl.signup);
-router.post('/login', userCtrl.login);
+router.post('/signup', multer, userCtrl.signup);
+router.post('/login', multer, userCtrl.login);
 router.get('/me', auth, userCtrl.me);
-router.put('/update', auth, userCtrl.update);
+router.put('/update', auth, multer, userCtrl.update);
 router.delete('/delete', auth, userCtrl.delete);
 
 module.exports = router;

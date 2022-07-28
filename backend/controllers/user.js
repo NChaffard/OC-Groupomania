@@ -1,8 +1,9 @@
 // Import dependancies
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const mysql = require('mysql');
+// const mysql = require('mysql');
 const db = require('../utils/db');
+const User = require('../models/user')
 
 // -------------------Database Functions-----------------------------------------------
 async function dbQuery(queryType, args) {
@@ -13,11 +14,31 @@ async function dbQuery(queryType, args) {
 
 // Signup
 exports.signup = (req, res, next) => {
+  // Creat an object user
+  let user = new User;
   // Hash the password
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
-      dbQuery("create", { "email": req.body.email, "name": req.body.name, "password": hash })
-        .then(() => { res.status(201).json({ message: "User created successfully !!" }) })
+      // Fill the user with req.body and the hash of the password
+      user = {
+        ...req.body,
+        password: hash
+      }
+      // Create user in db
+      dbQuery("create", user)
+        .then((response) => {
+          // Then get the user id from response
+          const id = response.insertId;
+
+          res.status(201).json({
+            userId: id,
+            token: jwt.sign(
+              { userId: id, isAdmin: 0 },
+              process.env.TOKEN_SECRET,
+              { expiresIn: '24h' }
+            )
+          })
+        })
         .catch(() => { res.status(400).json({ error: "User already exists !!" }) });
     })
     .catch((error) => res.status(500).json({ error }));
@@ -26,6 +47,7 @@ exports.signup = (req, res, next) => {
 // Login
 exports.login = (req, res, next) => {
   // Find user in database with his email
+  console.log(req.body)
   dbQuery("select", { "email": req.body.email })
     .then((response) => {
       if (response == '') {
@@ -44,7 +66,7 @@ exports.login = (req, res, next) => {
             res.status(200).json({
               userId: user.id,
               token: jwt.sign(
-                { userId: user.id },
+                { userId: user.id, isAdmin: user.isAdmin },
                 process.env.TOKEN_SECRET,
                 { expiresIn: '24h' }
               )
@@ -57,15 +79,17 @@ exports.login = (req, res, next) => {
 };
 // Get the user
 exports.me = (req, res, next) => {
+  let user = new User;
   dbQuery("select", { "id": req.auth.userId })
     .then((response) => {
-      if (response == '') {
-        res.status(400).json({ message: "This post doesn't exist !" })
+
+      delete response[0].password
+      delete response[0].isAdmin
+      user = {
+        ...response[0]
       }
-      else {
-        delete response[0].password
-        res.status(200).json(response[0])
-      }
+      res.status(200).json(user)
+
     })
     .catch((error) => {
       res.status(400).json({ message: " error: " + error })
@@ -74,11 +98,19 @@ exports.me = (req, res, next) => {
 }
 // Update
 exports.update = (req, res, next) => {
+  let user = new User;
+
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
-      dbQuery("update", { "email": req.body.email, "name": req.body.name, "password": hash, "id": req.body.userId })
-        .then(() => { res.status(201).json({ message: "User updated successfully !!" }); })
-        .catch((error) => { res.status(400).json({ message: "User doesn't exist !!" }); })
+      user = {
+        ...req.body,
+        id: req.auth.userId,
+        password: hash
+      }
+      console.log(user)
+      dbQuery("update", user)
+        .then(() => { res.status(201).json(user) })
+        .catch((error) => { res.status(400).json({ error: error }); })
     })
     .catch(error => res.status(500).json({ error }));
 };
