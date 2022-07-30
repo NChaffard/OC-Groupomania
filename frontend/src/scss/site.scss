@@ -1,15 +1,20 @@
 @import './utils/variables.scss';
 
+.header {
+    position: fixed;
+    width: 100vw;
+}
+
 .main {
     display: flex;
     justify-content: center;
-    background-color: $secondary;
+    background-color: #F7F8FA;
 }
 
 .nav {
     display: flex;
     align-items: center;
-    background-color: #fd2d01;
+    background-color: $primary-darken;
     padding: 10px;
     height: 100px;
 
@@ -28,4 +33,16 @@
             }
         }
     }
+}
+
+.btn {
+    border: none;
+    background-color: transparent;
+    color: $tertiary;
+    font-size: 1.2em;
+
+    &:hover {
+        color: $primary;
+    }
+
 }

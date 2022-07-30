@@ -1,3 +1,5 @@
+@import './utils/variables.scss';
+
 .form {
     width: 100%;
     display: flex;
@@ -15,5 +17,24 @@
 
     &__submit {
         padding: 5px;
+        margin-top: 10px;
+        background: $secondary;
+        border: none;
+        color: $tertiary;
+        border-radius: 20px;
+        height: 40px;
+        width: 150px;
+        font-size: 1.2em;
+
+
+        &_on {
+            color: white;
+            background-color: $tertiary;
+        }
+
+        &:hover {
+            background-color: $primary;
+            color: white;
+        }
     }
 }

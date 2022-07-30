@@ -1,0 +1,27 @@
+@import './utils/variables.scss';
+
+.form-post {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+
+    &__text {
+        width: 50vw;
+        height: 30vh
+    }
+}
+
+.text-group {
+    display: flex;
+    flex-direction: column;
+
+    & label {
+        color: $tertiary;
+    }
+}

@@ -27,7 +27,6 @@ export function LoginForm({ onConnect }) {
         setError(null)
         setLoading(true)
         e.preventDefault()
-        console.log(endpoint)
         const data = new FormData(e.target)
         try {
 
@@ -49,11 +48,11 @@ export function LoginForm({ onConnect }) {
         }
     }
 
-    return <main className="main">
-        <form className="form" onSubmit={handleSubmit}>
+    return <main className="main-login">
+        <form className="form form-login" onSubmit={handleSubmit}>
             <div className="form-container">
 
-                {signupMode === true ? <h2 className="form__title form__title_on">S'enregistrer</h2> : <h2 className="form__title">Se connecter</h2>}
+                {signupMode === true ? <h2 className="form-login__title form-login__title_on">S'enregistrer</h2> : <h2 className="form-login__title">Se connecter</h2>}
                 {error && <Alert>{error}</Alert>}
                 <div className="form-group">
                     <label htmlFor="email">Email</label>
@@ -68,8 +67,12 @@ export function LoginForm({ onConnect }) {
                     <label htmlFor="password">Password</label>
                     <input type="text" name='password' id='password' required />
                 </div>
+
                 <button className={signupMode === true ? "form__submit form__submit_on" : "form__submit"} disabled={loading} type='submit'>Envoyer</button>
-                {signupMode === true ? <button className="signup signup_on" onClick={handleClick}>Se connecter</button> : <button className="signup signup_off" onClick={handleClick}>S'inscrire</button>}
+
+                {signupMode === true ?
+                    <button className="signup signup_on" onClick={handleClick}>Se connecter</button> :
+                    <button className="signup signup_off" onClick={handleClick}>S'inscrire</button>}
 
             </div>
         </form>

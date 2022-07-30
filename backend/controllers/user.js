@@ -29,15 +29,22 @@ exports.signup = (req, res, next) => {
         .then((response) => {
           // Then get the user id from response
           const id = response.insertId;
-
-          res.status(201).json({
-            userId: id,
-            token: jwt.sign(
-              { userId: id, isAdmin: 0 },
-              process.env.TOKEN_SECRET,
-              { expiresIn: '24h' }
-            )
-          })
+          dbQuery("select", { "id": id })
+            .then((response) => {
+              user.name = response[0].name
+              res.status(201).json({
+                userId: id,
+                token: jwt.sign(
+                  {
+                    name: user.name,
+                    userId: id,
+                    isAdmin: 0
+                  },
+                  process.env.TOKEN_SECRET,
+                  { expiresIn: '24h' }
+                )
+              })
+            })
         })
         .catch(() => { res.status(400).json({ error: "User already exists !!" }) });
     })
@@ -66,7 +73,11 @@ exports.login = (req, res, next) => {
             res.status(200).json({
               userId: user.id,
               token: jwt.sign(
-                { userId: user.id, isAdmin: user.isAdmin },
+                {
+                  name: user.name,
+                  userId: user.id,
+                  isAdmin: user.isAdmin
+                },
                 process.env.TOKEN_SECRET,
                 { expiresIn: '24h' }
               )

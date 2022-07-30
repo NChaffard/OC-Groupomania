@@ -1,8 +1,9 @@
 @import './utils/variables.scss';
 
-.main {
-    justify-content: center;
+.main-login {
+    display: flex;
     align-items: center;
+    height: 100vh;
 }
 
 .signup {
@@ -18,10 +19,6 @@
 }
 
 .form {
-    margin: 0;
-    border-right: 2px solid $tertiary;
-    width: 50vw;
-
     &-container {
         display: flex;
         flex-direction: column;
@@ -38,28 +35,21 @@
         }
     }
 
-    &__title {
-        color: $primary;
+    &-login {
+        margin: 0;
+        border-right: 2px solid $tertiary;
+        width: 50vw;
 
-        &_on {
-            color: $tertiary;
+
+
+        &__title {
+            color: $primary;
+
+            &_on {
+                color: $tertiary;
+            }
         }
-    }
 
-    &__submit {
-        margin-top: 10px;
-        background: $secondary;
-        border: none;
-        color: $tertiary;
-        border-radius: 20px;
-        height: 40px;
-        width: 150px;
-        font-size: 1.2em;
-
-        &_on {
-            color: white;
-            background-color: $tertiary;
-        }
     }
 
     &-right {
@@ -70,5 +60,4 @@
             width: 50vw;
         }
     }
-
 }

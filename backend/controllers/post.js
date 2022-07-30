@@ -9,12 +9,14 @@ const Post = require('../models/Post')
 async function dbQuery(queryType, args) {
     return await db.dbQuery(queryType, table = 'posts', args);
 }
+
 // ----------------Ends of functions---------------------------------------
 
 // Create post
 exports.createPost = (req, res, next) => {
     let post = new Post;
     post = {
+        name: req.auth.name,
         userId: req.auth.userId,
         likes: JSON.stringify([]),
         dislikes: JSON.stringify([]),
@@ -27,6 +29,7 @@ exports.createPost = (req, res, next) => {
     dbQuery("create", post)
         .then((response) => {
             post.id = response.insertId;
+            post.time_stamp = new Date();
             res.status(201).json(post);
         })
         .catch((error) => { res.status(400).json({ message: " error: " + error }) });
@@ -52,15 +55,32 @@ exports.updatePost = (req, res, next) => {
     // Create an object Post
     let post = new Post;
     // Fill it
+
     post = {
-        id: parseInt(req.params.id),
+        id: req.params.id,
+        name: req.auth.name,
         userId: req.auth.userId,
+        likes: JSON.stringify(req.body.likes),
+        dislikes: JSON.stringify(req.body.dislikes),
         ...req.body
     }
+    post.id = parseInt(post.id)
     if (req.file) {
-        // If there is a file, set imageUrl
+        if (post.imageUrl) {
+            const filename = post.imageUrl.split('/images/')[1]
+            fs.unlink(`images/${filename}`, (error) => {
+                if (error) {
+                    console.log(error);
+                }
+                else {
+                    console.log("Image deleted successfully");
+                    // post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                }
+            })
+        }
         post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     }
+
     // Update db
     dbQuery("update", post)
         // Then return post updated
@@ -71,7 +91,7 @@ exports.updatePost = (req, res, next) => {
 exports.likePost = (req, res, next) => {
     // Prepare variables
     const userId = req.auth.userId;
-    const like = req.body.like
+    const like = parseInt(req.body.like)
     // Create an object Post
     let post = new Post;
 
@@ -108,6 +128,19 @@ exports.deletePost = (req, res, next) => {
             res.status(200);
             // Verify if the user who wants to modify the post is the one who created it
             if (response[0].userId === req.auth.userId) {
+                if (response[0].imageUrl) {
+
+                    const filename = response[0].imageUrl.split('/images/')[1]
+                    fs.unlink(`images/${filename}`, (error) => {
+                        if (error) {
+                            console.log(error);
+                        }
+                        else {
+                            console.log("Image deleted successfully");
+                        }
+                    })
+                }
+
                 dbQuery("delete", { "id": req.params.id })
                     .then(() => { res.status(201).json({ message: "Post deleted successfully !!" }); })
                     .catch((error) => {

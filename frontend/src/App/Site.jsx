@@ -83,9 +83,9 @@ function NavBar({ currentPage, onClick }) {
         <nav className="nav">
             <img className="nav__logo" src={logo} alt="Logo Groupomania" />
             <ul className="nav-list">
-                <li className={navClass('posts')}>
+                {/* <li className={navClass('posts')}>
                     <a href="#posts" className="nav-list__link" onClick={() => onClick('posts')}>Posts</a>
-                </li>
+                </li> */}
                 <li className={navClass('addPost')}>
                     <a href="#addPost" className="nav-list__link" onClick={() => onClick('addPost')}>Ajouter</a>
                 </li>
