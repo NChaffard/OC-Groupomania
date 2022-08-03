@@ -49,13 +49,23 @@ exports.getPosts = (req, res, next) => {
             res.status(400).json({ message: " error: " + error })
         });
 };
+async function deleteImage(filename) {
+    await fs.unlink(`images/${filename}`, (error) => {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            console.log("Image deleted successfully");
+        }
+    })
+}
 
 // Update a post
 exports.updatePost = (req, res, next) => {
     // Create an object Post
     let post = new Post;
-    // Fill it
 
+    // Fill it
     post = {
         id: req.params.id,
         name: req.auth.name,
@@ -65,20 +75,29 @@ exports.updatePost = (req, res, next) => {
         ...req.body
     }
     post.id = parseInt(post.id)
-    if (req.file) {
-        if (post.imageUrl) {
-            const filename = post.imageUrl.split('/images/')[1]
+    // If  there is a file transmitted in the form or the deleteImage input
+    if (req.file || req.body.deleteImage) {
+        // If there is a previous image in post delete it
+        if (req.body.imageUrl) {
+            const filename = req.body.imageUrl.split('/images/')[1]
             fs.unlink(`images/${filename}`, (error) => {
                 if (error) {
                     console.log(error);
                 }
                 else {
                     console.log("Image deleted successfully");
-                    // post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                 }
             })
         }
-        post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        // If there is a new image, get the url for the db
+        if (req.file) {
+            post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+
+        } else
+        // Else the imageUrl is null
+        {
+            post.imageUrl = null
+        }
     }
 
     // Update db

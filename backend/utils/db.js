@@ -22,8 +22,8 @@ module.exports = {
             else if (table == "posts") {
                 if (args) {
                     const queryBaseEnd = args.id === -1 ? 'ORDER BY `time_stamp` DESC' : 'WHERE ?? = ?';
-                    const queryBase = 'SELECT ??, ??, ??, ??, ??, ??, ??, ??,?? FROM ?? LEFT JOIN ?? ON ?? = ?? ' + queryBaseEnd;
-                    query = mysql.format(queryBase, ["posts.id", "posts.title", "posts.text", "posts.imageUrl", "posts.time_stamp", "posts.likes", "posts.dislikes", "posts.userId", "users.name", table, "users", "users.id", "posts.userId", "posts.id", args.id = args.id]);
+                    const queryBase = 'SELECT ??, ??, ??, ??, ??, ??, ??, ?? FROM ?? LEFT JOIN ?? ON ?? = ?? ' + queryBaseEnd;
+                    query = mysql.format(queryBase, ["posts.id", "posts.text", "posts.imageUrl", "posts.time_stamp", "posts.likes", "posts.dislikes", "posts.userId", "users.name", table, "users", "users.id", "posts.userId", "posts.id", args.id = args.id]);
                 }
                 else {
                     return { status: 400, message: "The request is not valid !!" };
@@ -39,8 +39,8 @@ module.exports = {
                 query = mysql.format(queryBase, [table, "email", "name", "password", args.email, args.name, args.password]);
             }
             else if (table == 'posts') {
-                const queryBase = 'INSERT INTO ?? (??,??,??,??,??,??) VALUES (?,?,?,?,?,?)';
-                query = mysql.format(queryBase, [table, "userId", "title", "text", "imageUrl", "likes", "dislikes", args.userId, args.title, args.text, args.imageUrl, args.likes, args.dislikes]);
+                const queryBase = 'INSERT INTO ?? (??,??,??,??,??) VALUES (?,?,?,?,?)';
+                query = mysql.format(queryBase, [table, "userId", "text", "imageUrl", "likes", "dislikes", args.userId, args.text, args.imageUrl, args.likes, args.dislikes]);
             }
             else {
                 return { status: 400, message: "The requested table is not valid !!" };
@@ -49,8 +49,8 @@ module.exports = {
         if (queryType == 'update') {
             if (table == "posts") {
                 if (args) {
-                    const queryBase = 'UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?';
-                    query = mysql.format(queryBase, [table, "title", args.title, "text", args.text, "imageUrl", args.imageUrl, "likes", args.likes, "dislikes", args.dislikes, "id", args.id]);
+                    const queryBase = 'UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?';
+                    query = mysql.format(queryBase, [table, "text", args.text, "imageUrl", args.imageUrl, "likes", args.likes, "dislikes", args.dislikes, "id", args.id]);
                 } else {
                     return { message: "The request is not valid !!" };
                 }

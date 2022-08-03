@@ -88,13 +88,11 @@ function Post({ post, onDelete, onUpdate, onLike }) {
                     <button onClick={handleDislike} disabled={likeButton === 1 ? true : false} className="social__dislike"><i className="fa-solid fa-thumbs-down"></i></button><span className="social__dislikeQty">{JSON.parse(post.dislikes).length}</span>
                 </span>
                 {showButtons ? <div className="card-footer__update">
-                    <button className="btn card-footer__btn" onClick={() => onUpdate(post)}><i class="fa-solid fa-pen"></i>Modifier</button>
-                    <button className="btn card-footer__btn" onClick={handleDelete} disabled={loading}><i class="fa-solid fa-trash"></i>Supprimer</button>
+                    <button className="btn card-footer__btn" onClick={() => onUpdate(post)}><i className="fa-solid fa-pen"></i>Modifier</button>
+                    <button className="btn card-footer__btn" onClick={handleDelete} disabled={loading}><i className="fa-solid fa-trash"></i>Supprimer</button>
                 </div> : null}
             </footer>
 
-            {/* <h3 className="card__title">{post.title}</h3> */}
-            {/* <p className="card__author">Post de {post.name}</p> */}
         </article>
     </li>
 }

@@ -54,7 +54,6 @@ exports.signup = (req, res, next) => {
 // Login
 exports.login = (req, res, next) => {
   // Find user in database with his email
-  console.log(req.body)
   dbQuery("select", { "email": req.body.email })
     .then((response) => {
       if (response == '') {
