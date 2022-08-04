@@ -18,6 +18,10 @@
     padding: 10px;
     height: 100px;
 
+    &__logo {
+        cursor: pointer;
+    }
+
     &-list {
         height: 100%;
         width: 100%;

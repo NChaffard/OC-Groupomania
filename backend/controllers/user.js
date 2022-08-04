@@ -34,6 +34,7 @@ exports.signup = (req, res, next) => {
               user.name = response[0].name
               res.status(201).json({
                 userId: id,
+                isAdmin: 0,
                 token: jwt.sign(
                   {
                     name: user.name,
@@ -71,6 +72,7 @@ exports.login = (req, res, next) => {
             // If passwords match, return id and a token from id
             res.status(200).json({
               userId: user.id,
+              isAdmin: user.isAdmin,
               token: jwt.sign(
                 {
                   name: user.name,

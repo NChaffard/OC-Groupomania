@@ -68,8 +68,8 @@ exports.updatePost = (req, res, next) => {
     // Fill it
     post = {
         id: req.params.id,
-        name: req.auth.name,
-        userId: req.auth.userId,
+        name: req.body.name,
+        userId: req.body.userId,
         likes: JSON.stringify(req.body.likes),
         dislikes: JSON.stringify(req.body.dislikes),
         ...req.body
@@ -99,7 +99,6 @@ exports.updatePost = (req, res, next) => {
             post.imageUrl = null
         }
     }
-
     // Update db
     dbQuery("update", post)
         // Then return post updated
@@ -146,7 +145,7 @@ exports.deletePost = (req, res, next) => {
         .then((response) => {
             res.status(200);
             // Verify if the user who wants to modify the post is the one who created it
-            if (response[0].userId === req.auth.userId) {
+            if ((response[0].userId === req.auth.userId) || req.auth.isAdmin === 1) {
                 if (response[0].imageUrl) {
 
                     const filename = response[0].imageUrl.split('/images/')[1]

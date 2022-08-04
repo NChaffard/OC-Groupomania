@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+
 import { useEffect } from 'react'
 import '../../scss/form.scss'
 import '../../scss/postForm.scss'
@@ -15,6 +17,7 @@ export function UpdatePostForm({ post, onSubmit }) {
 function PostForm({ post = null, onSubmit }) {
     const [deleteImage, setDeleteImage] = useState(false)
     const [image, setImage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -54,6 +57,9 @@ function PostForm({ post = null, onSubmit }) {
             <input type="hidden" name="time_stamp" id="time_stamp" value={post.time_stamp} />
             <input type="hidden" name="likes" id="likes" value={post.likes} />
             <input type="hidden" name="dislikes" id="dislikes" value={post.dislikes} />
+            <input type="hidden" name="name" id="name" value={post.name} />
+            <input type="hidden" name="userId" id="userId" value={post.userId} />
+
         </> : null}
         {/* If there is a previous image, get the url */}
         {post && post.imageUrl ?
@@ -68,7 +74,7 @@ function PostForm({ post = null, onSubmit }) {
 
         <div className="text-group">
             <label htmlFor="text">Contenu du post</label>
-            <textarea name="text" id="text" className="form__text" defaultValue={(post ? post.text : '')} required />
+            <textarea name="text" id="text" className="form__text" defaultValue={(post ? post.text : '')} minLength="5" maxLength="1000" required />
         </div>
         <div className="form-group">
             <label htmlFor="image">Image</label>
@@ -81,7 +87,7 @@ function PostForm({ post = null, onSubmit }) {
                 <button onClick={handleDeleteImage} className="form__delImage">Supprimer l'image</button>
             </> : null}
         <div className="form-group">
-            <button type="submit" className="form__submit">Envoyer</button>
+            <button type="submit" className="form__submit">Envoyer</button> <button className="form__submit form__submit_cancel" onClick={() => navigate('/')}>Annuler</button>
         </div>
     </form>
 }

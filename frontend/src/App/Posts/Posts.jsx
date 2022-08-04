@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { Loader } from '../../ui/Loader';
 import { dateFormat } from '../../utils/dateFormat';
 import '../../scss/posts.scss'
@@ -21,6 +23,7 @@ function Post({ post, onDelete, onUpdate, onLike }) {
     const [loading, setLoading] = useState(false)
     const [like, setLike] = useState(null)
     const [likeButton, setLikeButton] = useState(null)
+    const navigate = useNavigate()
 
     const handleDelete = async function (e) {
         e.preventDefault()
@@ -65,8 +68,9 @@ function Post({ post, onDelete, onUpdate, onLike }) {
 
 
     useEffect(function () {
-        const lsUserId = parseInt(localStorage.getItem('userId'))
-        if (lsUserId === post.userId) {
+        const isUserId = parseInt(localStorage.getItem('userId'))
+        const isAdmin = parseInt(localStorage.getItem('isAdmin'))
+        if (isUserId === post.userId || isAdmin === 1) {
             setShowButtons(true)
         }
     }, [])
@@ -88,7 +92,7 @@ function Post({ post, onDelete, onUpdate, onLike }) {
                     <button onClick={handleDislike} disabled={likeButton === 1 ? true : false} className="social__dislike"><i className="fa-solid fa-thumbs-down"></i></button><span className="social__dislikeQty">{JSON.parse(post.dislikes).length}</span>
                 </span>
                 {showButtons ? <div className="card-footer__update">
-                    <button className="btn card-footer__btn" onClick={() => onUpdate(post)}><i className="fa-solid fa-pen"></i>Modifier</button>
+                    <button className="btn card-footer__btn" onClick={() => { onUpdate(post); navigate('/updatePost') }}><i className="fa-solid fa-pen"></i>Modifier</button>
                     <button className="btn card-footer__btn" onClick={handleDelete} disabled={loading}><i className="fa-solid fa-trash"></i>Supprimer</button>
                 </div> : null}
             </footer>

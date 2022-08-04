@@ -36,7 +36,8 @@ export function LoginForm({ onConnect }) {
 
             })
             localStorage.setItem('token', user.token)
-            localStorage.setItem('userId', user.userId)
+            localStorage.setItem('userId', parseInt(user.userId))
+            localStorage.setItem('isAdmin', parseInt(user.isAdmin))
             onConnect(user)
         } catch (e) {
             if (e instanceof ApiErrors) {
