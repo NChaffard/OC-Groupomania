@@ -75,6 +75,7 @@ exports.updatePost = (req, res, next) => {
         ...req.body
     }
     post.id = parseInt(post.id)
+    post.userId = parseInt(post.userId)
     // If  there is a file transmitted in the form or the deleteImage input
     if (req.file || req.body.deleteImage) {
         // If there is a previous image in post delete it

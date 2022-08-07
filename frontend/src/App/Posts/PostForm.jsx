@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-
 import { useEffect } from 'react'
+import { Field } from '../../ui/Field';
+
 import '../../scss/form.scss'
 import '../../scss/postForm.scss'
 
@@ -20,16 +21,16 @@ function PostForm({ post = null, onSubmit }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-
         if (image.length < 1) {
             if (post && post.imageUrl) {
                 setImage(post.imageUrl)
             }
         }
-    }, [image])
+    }, [image, post])
 
     const handleSubmit = async function (e) {
         e.preventDefault()
+
         const data = new FormData(e.target);
         if (post && post.imageUrl && deleteImage === true) {
             data.append('deleteImage', 'true')
@@ -76,14 +77,18 @@ function PostForm({ post = null, onSubmit }) {
             <label htmlFor="text">Contenu du post</label>
             <textarea name="text" id="text" className="form__text" defaultValue={(post ? post.text : '')} minLength="5" maxLength="1000" required />
         </div>
+        {/* <Field type="textarea" name="text" id="text" className="form__text" defaultValue={(post ? post.text : '')} minLength="5" maxLength="1000" required >Contenu du post</Field> */}
+
         <div className="form-group">
             <label htmlFor="image">Image</label>
             <input type="file" accept="image/*" id="image" name="image" className="form__file" onChange={handleAddImage} />
         </div>
+        {/* <Field type="file" accept="image/*" id="image" name="image" className="form__file" onChange={handleAddImage} >Image</Field> */}
+
         {/* If there is an image, show it */}
         {image.length > 1 && !deleteImage ?
             <>
-                <img className="form__img" src={image} alt="image" />
+                <img className="form__img" src={image} alt="preview" />
                 <button onClick={handleDeleteImage} className="form__delImage">Supprimer l'image</button>
             </> : null}
         <div className="form-group">

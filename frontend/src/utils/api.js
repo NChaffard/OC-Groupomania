@@ -5,6 +5,13 @@ export class ApiErrors {
     constructor(errors) {
         this.errors = errors
     }
+
+    get errorsPerField() {
+        return this.errors.reduce((acc, error) => {
+            return { ...acc, [error.field]: error.message }
+        }, {})
+    }
+
 }
 
 

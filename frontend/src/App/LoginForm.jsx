@@ -4,17 +4,48 @@ import { ApiErrors, apiFetch } from '../utils/api';
 import '../scss/loginForm.scss'
 import brandImg from '../assets/icon-left-font.png';
 import { useEffect } from 'react';
+import { Field } from '../ui/Field';
+import { formValidation, validateInput } from '../utils/validateInput';
 
 
 
 export function LoginForm({ onConnect }) {
     const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [errorMsg, setErrorMsg] = useState({})
+
+    const [cantSubmit, setCantSubmit] = useState(false)
     const [signupMode, setSignupMode] = useState(false)
     const [endpoint, setEndpoint] = useState('/auth/login')
 
+
+
+    const handleInput = function (e) {
+        let msg = validateInput(e.target)
+
+        setErrorMsg(prev => ({
+            ...prev,
+            ...msg
+        })
+        )
+    }
+
+
     useEffect(function () {
-        signupMode === true ? setEndpoint('/auth/signup') : setEndpoint('/auth/login')
+
+        setError(null)
+        setErrorMsg({})
+        if (signupMode === true) {
+            document.getElementById('email').value = null;
+            document.getElementById('password').value = null;
+            document.getElementById('name').value = null;
+
+            setEndpoint('/auth/signup')
+        } else {
+            document.getElementById('email').value = null;
+            document.getElementById('password').value = null;
+
+            setEndpoint('/auth/login')
+        }
     }, [signupMode])
 
     const handleClick = function (e) {
@@ -23,31 +54,36 @@ export function LoginForm({ onConnect }) {
     }
 
     const handleSubmit = async function (e) {
-
         setError(null)
-        setLoading(true)
+        setCantSubmit(true)
         e.preventDefault()
-        const data = new FormData(e.target)
-        try {
+        if (formValidation(errorMsg)) {
 
-            const user = await apiFetch(endpoint, {
-                method: 'POST',
-                body: data
-
-            })
-            localStorage.setItem('token', user.token)
-            localStorage.setItem('userId', parseInt(user.userId))
-            localStorage.setItem('isAdmin', parseInt(user.isAdmin))
-            onConnect(user)
-        } catch (e) {
-            if (e instanceof ApiErrors) {
-                setError(e.errors)
-            } else {
-                console.error(e)
+            const data = new FormData(e.target)
+            try {
+                const user = await apiFetch(endpoint, {
+                    method: 'POST',
+                    body: data
+                })
+                localStorage.setItem('token', user.token)
+                localStorage.setItem('userId', parseInt(user.userId))
+                localStorage.setItem('isAdmin', parseInt(user.isAdmin))
+                onConnect(user)
+            } catch (e) {
+                if (e instanceof ApiErrors) {
+                    setError(e.errors)
+                } else {
+                    console.error(e)
+                }
             }
-            setLoading(false)
+        } else {
+            setError("Un champ est invalide")
+            console.log('submit')
         }
+        setCantSubmit(false)
     }
+
+
 
     return <main className="main-login">
         <form className="form form-login" onSubmit={handleSubmit}>
@@ -55,21 +91,14 @@ export function LoginForm({ onConnect }) {
 
                 {signupMode === true ? <h2 className="form-login__title form-login__title_on">S'enregistrer</h2> : <h2 className="form-login__title">Se connecter</h2>}
                 {error && <Alert>{error}</Alert>}
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input type="text" name='email' id='email' required />
-                </div>
-                {signupMode === true ? <><div className="form-group">
-                    <label htmlFor="name">Nom</label>
-                    <input type="text" name='name' id='name' required />
-                </div></> : null}
+                <Field onBlur={handleInput} error={errorMsg.email} name='email' type='email' id='email' required >Email</Field>
+                {signupMode === true ? <>
+                    <Field onBlur={handleInput} error={errorMsg.name} name='name' id='name' required >Nom</Field>
+                </> : null}
 
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input type="text" name='password' id='password' required />
-                </div>
+                <Field onBlur={handleInput} error={errorMsg.password} name='password' type='password' id='password' required >Mot de passe</Field>
 
-                <button className={signupMode === true ? "form__submit form__submit_on" : "form__submit"} disabled={loading} type='submit'>Envoyer</button>
+                <button className={signupMode === true ? "form__submit form__submit_on" : "form__submit"} disabled={cantSubmit} type='submit'>Envoyer</button>
 
                 {signupMode === true ?
                     <button className="signup signup_on" onClick={handleClick}>Se connecter</button> :

@@ -47,7 +47,7 @@ exports.signup = (req, res, next) => {
               })
             })
         })
-        .catch(() => { res.status(400).json({ error: "User already exists !!" }) });
+        .catch(() => { res.status(400).json({ error: "L'utilisateur existe déja !!" }) });
     })
     .catch((error) => res.status(500).json({ error }));
 };
@@ -58,7 +58,7 @@ exports.login = (req, res, next) => {
   dbQuery("select", { "email": req.body.email })
     .then((response) => {
       if (response == '') {
-        res.status(400).json({ error: "Email not found!!" })
+        res.status(400).json({ error: "L'email n'existe pas!!" })
       }
       else {
         const user = response[0];
@@ -67,7 +67,7 @@ exports.login = (req, res, next) => {
           .then(valid => {
             if (!valid) {
               // If passwords don't match return error
-              return res.status(401).json({ error: 'Wrong password !' });
+              return res.status(401).json({ error: 'Mot de passe érroné !' });
             }
             // If passwords match, return id and a token from id
             res.status(200).json({
