@@ -7,6 +7,8 @@ import { Posts } from './Posts/Posts';
 import { CreatePostForm, UpdatePostForm } from './Posts/PostForm';
 import logo from '../assets/icon-left-font-monochrome-white.svg';
 import '../scss/site.scss';
+import { AddPost } from '../assets/AddPost';
+import { Logout } from '../assets/logout';
 
 export function Site() {
 
@@ -43,40 +45,40 @@ export function Site() {
         if (pathname === '/') {
             fetchPosts()
         }
-    }, [pathname, fetchPosts])
+    })
 
 
     return (
         <div className="wrapper">
             <header className="header">
                 <nav className="nav">
-                    <img className="nav__logo" src={logo} alt="Logo Groupomania" onClick={() => navigate('/')} />
+                    <img className="nav__logo" src={logo} alt="Logo Groupomania" onClick={() => { navigate('/'); window.location.reload() }} />
                     <ul className="nav-list">
                         <li className="nav-list__item">
-                            <Link to="/addPost" className="nav-list__link" >Ajouter</Link>
+                            <Link to="/add-post" className="nav-list__link" ><AddPost />Ajouter un post</Link>
                         </li>
-                        <li className="nav-list__item">
-                            <a href="/" className="nav-list__link" onClick={handleLogout}>Se déconnecter</a>
+                        <li className="nav-list__item logout">
+                            <a href="/" className="nav-list__link" onClick={handleLogout}><Logout />Se déconnecter</a>
                         </li>
                     </ul>
                 </nav>
             </header>
             <main className="main">
                 <Routes>
-                    <Route exact path='/addPost' element={
+                    <Route exact path='/add-post' element={
                         <CreatePostForm onSubmit={handleCreate} />
                     }>
                     </Route>
-                    <Route exact path='/updatePost' element={
+                    <Route exact path='/update-post' element={
                         <UpdatePostForm post={post} onSubmit={handleUpdate} />
                     }>
                     </Route>
-                    <Route path='/' element={
+                    <Route exact path='/' element={
                         <Posts posts={posts} onDelete={deletePost} onUpdate={setPost} onLike={likePost} />
                     }>
                     </Route>
                 </Routes>
             </main>
-        </div>
+        </div >
     )
 }

@@ -1,4 +1,4 @@
-import { useReducer } from "react"
+import { useCallback, useReducer } from "react"
 import { apiFetch } from "../utils/api"
 
 
@@ -38,13 +38,13 @@ export function usePosts() {
             const posts = await apiFetch('/post')
             dispatch({ type: 'SET_POSTS', payload: posts })
         },
-        deletePost: async function (post) {
+        deletePost: useCallback(async function (post) {
             await apiFetch('/post/' + post.id, {
                 method: 'DELETE'
             })
             dispatch({ type: 'DELETE_POST', payload: post })
-        },
-        createPost: async function (post) {
+        }, []),
+        createPost: useCallback(async function (post) {
 
             const newPost = await apiFetch('/post', {
                 method: 'POST',
@@ -52,15 +52,15 @@ export function usePosts() {
             })
 
             dispatch({ type: 'CREATE_POST', payload: newPost })
-        },
-        updatePost: async function (post) {
+        }, []),
+        updatePost: useCallback(async function (post) {
             const newPost = await apiFetch('/post/' + post.get('id'), {
                 method: 'PUT',
                 body: post
             })
             dispatch({ type: 'UPDATE_POST', payload: newPost })
-        },
-        likePost: async function (post, like) {
+        }, []),
+        likePost: useCallback(async function (post, like) {
             const data = new FormData()
             data.append('like', like)
             const newPost = await apiFetch('/post/' + post.id + '/like', {
@@ -68,6 +68,6 @@ export function usePosts() {
                 body: data
             })
             dispatch({ type: 'UPDATE_POST', payload: newPost })
-        }
+        }, [])
     }
 }

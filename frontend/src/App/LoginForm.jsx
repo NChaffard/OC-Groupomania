@@ -91,12 +91,12 @@ export function LoginForm({ onConnect }) {
 
                 {signupMode === true ? <h2 className="form-login__title form-login__title_on">S'enregistrer</h2> : <h2 className="form-login__title">Se connecter</h2>}
                 {error && <Alert>{error}</Alert>}
-                <Field onBlur={handleInput} error={errorMsg.email} name='email' type='email' id='email' required >Email</Field>
+                <Field onBlur={handleInput} className="form__input" error={errorMsg.email} name='email' type='email' id='email' required >Email</Field>
                 {signupMode === true ? <>
-                    <Field onBlur={handleInput} error={errorMsg.name} name='name' id='name' required >Nom</Field>
+                    <Field onBlur={handleInput} className="form__input" error={errorMsg.name} name='name' id='name' required >Nom</Field>
                 </> : null}
 
-                <Field onBlur={handleInput} error={errorMsg.password} name='password' type='password' id='password' required >Mot de passe</Field>
+                <Field onBlur={handleInput} className="form__input" error={errorMsg.password} name='password' type='password' id='password' required >Mot de passe</Field>
 
                 <button className={signupMode === true ? "form__submit form__submit_on" : "form__submit"} disabled={cantSubmit} type='submit'>Envoyer</button>
 

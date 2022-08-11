@@ -1,7 +1,6 @@
 // Import dependancies
 // const mysql = require('mysql');
 const fs = require('fs');
-const { request } = require('http');
 const db = require('../utils/db');
 const Post = require('../models/Post')
 

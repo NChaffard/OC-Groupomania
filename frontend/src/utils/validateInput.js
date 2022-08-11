@@ -1,35 +1,47 @@
 export function validateInput(input) {
+    let msg;
+    if (input.files) {
+        let { name } = input
+        let { type, filename, size } = input.files[0]
+        let isOk = false
+        input.accept.split(',').map(a => a.trim() === type ? isOk = true : null)
+        !isOk ? msg = { [name]: `Le format de fichier est invalide` } :
+            size >= 10000000 ? msg = { [name]: 'Le fichier est trop lourd' } : msg = { [name]: '' }
 
-    let { type, name, value } = input
-    let msg = { [name]: '' }
+    } else {
 
-    const getRegexp = (type) => {
 
-        let regExp = null
-        switch (type) {
+        let { type, name, value } = input
+        msg = { [name]: '' }
 
-            case 'email':
-                regExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                break;
-            case 'password':
-                regExp = /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,30}$/;
-                break;
-            default:
-                regExp = /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s-]{2,30}$/;
-                break;
+        const getRegexp = (type) => {
+
+            let regExp = null
+            switch (type) {
+
+                case 'email':
+                    regExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    break;
+                case 'password':
+                    regExp = /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,30}$/;
+                    break;
+
+                default:
+                    regExp = /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s():;.,"!?-]{5,3000}$/;
+
+            }
+            return regExp
         }
-        return regExp
-    }
 
 
-    if (!value) {
-        msg = { [name]: `Le champ ne peut pas être vide` }
-    }
-    else if (!getRegexp(type).test(value)) {
-        console.log(value)
-        msg = { [name]: `Le champ est invalide` }
-    }
+        if (!value) {
+            msg = { [name]: `Le champ ne peut pas être vide` }
+        }
+        else if (!getRegexp(type).test(value)) {
+            msg = { [name]: `Le champ est invalide` }
+        }
 
+    }
     return msg;
 
 }

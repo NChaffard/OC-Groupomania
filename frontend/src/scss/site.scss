@@ -14,12 +14,14 @@
 .nav {
     display: flex;
     align-items: center;
-    background-color: $primary-darken;
+    background-color: $primary;
     padding: 10px;
-    height: 100px;
+    height: 40px;
 
     &__logo {
         cursor: pointer;
+        height: 100%;
+
     }
 
     &-list {
@@ -27,26 +29,38 @@
         width: 100%;
         display: flex;
         align-items: center;
-        font-size: 1.4em;
+        font-size: 1.2em;
+        margin: 0 10px 0 10px;
+        justify-content: space-between;
+
+        &__link {
+            display: flex;
+
+            &:hover {
+                color: $tertiary
+            }
+        }
 
         &__item {
             margin: 0 20px 0 20px;
 
-            &_active a {
-                color: #4E5166;
-            }
         }
     }
 }
+
 
 .btn {
     border: none;
     background-color: transparent;
     color: $tertiary;
     font-size: 1.2em;
+}
 
-    &:hover {
-        color: $primary;
-    }
+button:hover {
+    color: $primary;
+}
 
+.invalid-feedback {
+    text-align: right;
+    color: $primary;
 }

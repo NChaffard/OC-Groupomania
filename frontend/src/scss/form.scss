@@ -9,6 +9,7 @@
 
     &-group {
         padding: 10px 0 10px 0;
+        text-align: end;
     }
 
     &__img {
@@ -37,4 +38,9 @@
             color: white;
         }
     }
+}
+
+.is-invalid {
+    border-color: red;
+    background-color: $secondary-transparent;
 }

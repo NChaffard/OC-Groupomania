@@ -7,7 +7,7 @@
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "node": "^18.4.0",
-    "nodemon": "^1.4.1"
+    "nodemon": "^1.19.4"
   },
   "scripts": {
     "start": "node server.js"
