@@ -39,14 +39,16 @@ function PostForm({ post = null, onSubmit }) {
                 setImage(post.imageUrl)
             }
         }
-    }, [image, post, navigate])
+        if (image.length > 1 && deleteImage === false && label === 'Ajouter une image') {
+            setLabel("Modifier l'image")
+        }
+    }, [image, post, navigate, deleteImage, label])
 
     const handleSubmit = async function (e) {
         e.preventDefault()
         let textMsg = validateInput(e.target.text)
         setErrorMsg(prev => ({ ...prev, ...textMsg }))
         if (formValidation(errorMsg)) {
-            console.log('form ok')
             const data = new FormData(e.target);
             if (post && post.imageUrl && deleteImage === true) {
                 data.append('deleteImage', 'true')
@@ -61,6 +63,7 @@ function PostForm({ post = null, onSubmit }) {
         e.preventDefault()
         setDeleteImage(true)
         setImage('')
+        setLabel('Ajouter une image')
         document.getElementById('image').value = ''
     }
 
@@ -93,7 +96,7 @@ function PostForm({ post = null, onSubmit }) {
 
 
 
-    return <form className="form-post" onSubmit={handleSubmit} encType="multipart/form-data">
+    return <form className="form form-post" onSubmit={handleSubmit} encType="multipart/form-data">
         {/* If it is a post update, get the data from post */}
         {post ? <><input type="hidden" name="id" id="id" value={post.id} />
             <input type="hidden" name="time_stamp" id="time_stamp" value={post.time_stamp} />
@@ -128,8 +131,8 @@ function PostForm({ post = null, onSubmit }) {
             </> : null
         }
         <div className="form-submit">
-            <button type="submit" className="form__submit form-submit__item">Envoyer</button>
-            <button className="form__submit form-submit__item_cancel" onClick={() => navigate('/')}>Annuler</button>
+            <button type="submit" className="submit form-submit__item">Envoyer</button>
+            <button className="submit form-submit__item_cancel" onClick={() => navigate('/')}>Annuler</button>
         </div>
     </form>
 }

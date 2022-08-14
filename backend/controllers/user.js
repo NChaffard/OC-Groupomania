@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // const mysql = require('mysql');
 const db = require('../utils/db');
-const User = require('../models/user')
 
 // -------------------Database Functions-----------------------------------------------
 async function dbQuery(queryType, args) {
@@ -14,13 +13,11 @@ async function dbQuery(queryType, args) {
 
 // Signup
 exports.signup = (req, res, next) => {
-  // Creat an object user
-  let user = new User;
   // Hash the password
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       // Fill the user with req.body and the hash of the password
-      user = {
+      let user = {
         ...req.body,
         password: hash
       }
@@ -91,13 +88,12 @@ exports.login = (req, res, next) => {
 };
 // Get the user
 exports.me = (req, res, next) => {
-  let user = new User;
   dbQuery("select", { "id": req.auth.userId })
     .then((response) => {
 
       delete response[0].password
       delete response[0].isAdmin
-      user = {
+      let user = {
         ...response[0]
       }
       res.status(200).json(user)
@@ -110,16 +106,14 @@ exports.me = (req, res, next) => {
 }
 // Update
 exports.update = (req, res, next) => {
-  let user = new User;
 
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
-      user = {
+      let user = {
         ...req.body,
         id: req.auth.userId,
         password: hash
       }
-      console.log(user)
       dbQuery("update", user)
         .then(() => { res.status(201).json(user) })
         .catch((error) => { res.status(400).json({ error: error }); })

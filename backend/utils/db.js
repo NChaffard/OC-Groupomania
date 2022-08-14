@@ -47,10 +47,11 @@ module.exports = {
             }
         }
         if (queryType == 'update') {
+            // Update the post but not the likes and dislikes
             if (table == "posts") {
                 if (args) {
-                    const queryBase = 'UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?';
-                    query = mysql.format(queryBase, [table, "text", args.text, "imageUrl", args.imageUrl, "likes", args.likes, "dislikes", args.dislikes, "id", args.id]);
+                    const queryBase = 'UPDATE ?? SET ?? = ?, ?? = ? WHERE ?? = ?';
+                    query = mysql.format(queryBase, [table, "text", args.text, "imageUrl", args.imageUrl, "id", args.id]);
                 } else {
                     return { message: "The request is not valid !!" };
                 }
@@ -65,6 +66,16 @@ module.exports = {
             }
             else {
                 return { status: 400, message: "The requested table is not valid !!" };
+            }
+        }
+        // Only update likes and dislikes in db
+        if (queryType === 'like') {
+            if (args) {
+                const queryBase = 'UPDATE ?? SET ?? = ?, ??= ? WHERE ??= ?'
+                query = mysql.format(queryBase, [table, "likes", args.likes, "dislikes", args.dislikes, "id", args.id])
+            }
+            else {
+                return { status: 400, message: "The request is  not valid !!" };
             }
         }
         if (queryType == 'delete') {

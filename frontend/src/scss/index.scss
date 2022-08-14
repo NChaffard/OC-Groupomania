@@ -1,9 +1,12 @@
 @import './utils/variables.scss';
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-family: $font;
 }
 
@@ -18,11 +21,16 @@ a {
   color: white;
 }
 
+img {
+  object-fit: contain;
+}
+
 button {
   cursor: pointer;
 }
 
 .icon {
+  box-sizing: content-box;
   width: 1.2em;
   height: 1.2em;
   padding: 0 5px 0 5px;

@@ -62,7 +62,6 @@ function Post({ post, onDelete, onUpdate, onLike }) {
         if (like !== null) {
             // If like is not null, send it
             onLike(post, like)
-            // setLike(null)
 
         }
     }, [like, onLike])
@@ -85,30 +84,30 @@ function Post({ post, onDelete, onUpdate, onLike }) {
     }, [post.userId])
 
     return <li className="posts-list__item">
-        <article className="card">
-            <header className="card-header">
-                <h3 className="card__author">{post.name}</h3>
-                <div className="card__date">{dateFormat(post.time_stamp)}</div>
+        <article className="post">
+            <header className="post-header">
+                <h3 className="post-header__author">{post.name}</h3>
+                <div className="post-header__date">{dateFormat(post.time_stamp)}</div>
             </header>
-            <main className="card-main">
-                {post.imageUrl ? <img className="card__img" src={post.imageUrl} alt="Illustration du post" /> : null}
-                <p className="card__text">{post.text}</p>
+            <main className="post-main">
+                {post.imageUrl ? <img className="post-main__img" src={post.imageUrl} alt="Illustration du post" /> : null}
+                <p className="post-main__text">{post.text}</p>
 
             </main>
-            <footer className="card-footer">
-                <span className="social">
-                    <button onClick={handleLike} disabled={likeButton === -1 ? true : false} className="social__like">
-                        <Like className='social__like-icon' />
+            <footer className="post-footer">
+                <span className="post-footer-social">
+                    <button onClick={handleLike} disabled={likeButton === -1 ? true : false} className="post-footer-social__like">
+                        <Like className='post-footer-social__like-icon' />
                     </button>
-                    <span className="social__like-qty">{JSON.parse(post.likes).length}</span>
-                    <button onClick={handleDislike} disabled={likeButton === 1 ? true : false} className="social__dislike">
-                        <Dislike className='social__dislike-icon' />
+                    <span className="post-footer-social__like-qty">{JSON.parse(post.likes).length}</span>
+                    <button onClick={handleDislike} disabled={likeButton === 1 ? true : false} className="post-footer-social__dislike">
+                        <Dislike className='post-footer-social__dislike-icon' />
                     </button>
-                    <span className="social__dislike-qty">{JSON.parse(post.dislikes).length}</span>
+                    <span className="post-footer-social__dislike-qty">{JSON.parse(post.dislikes).length}</span>
                 </span>
-                {showButtons ? <div className="card-footer__update">
-                    <button className="btn card-footer__btn card-footer__btn-update" onClick={() => { onUpdate(post); navigate('/update-post') }}><Pen />Modifier</button>
-                    <button className="btn card-footer__btn card-footer__btn-delete" onClick={handleDelete} disabled={loading}><Trash />Supprimer</button>
+                {showButtons ? <div className="post-footer__update">
+                    <button className="btn post-footer__btn card-footer__btn-update" onClick={() => { onUpdate(post); navigate('/update-post') }}><Pen />Modifier</button>
+                    <button className="btn post-footer__btn card-footer__btn-delete" onClick={handleDelete} disabled={loading}><Trash />Supprimer</button>
                 </div> : null}
             </footer>
 

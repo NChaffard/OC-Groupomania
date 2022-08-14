@@ -1,4 +1,5 @@
 @import './utils/variables.scss';
+@import './utils/breakpoints.scss';
 
 .header {
     position: fixed;
@@ -9,14 +10,27 @@
     display: flex;
     justify-content: center;
     background-color: #F7F8FA;
+    min-height: 100vh;
 }
 
 .nav {
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: $primary;
-    padding: 10px;
-    height: 40px;
+    background-image: url('../assets/icon-left-font-monochrome-white.svg');
+
+    @include header-breakpoint {
+        background-image: url('../assets/icon-mini-blanc.png');
+    }
+
+    @include mobile-breakpoint {
+        background-image: none;
+    }
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
 
     &__logo {
         cursor: pointer;
@@ -27,23 +41,54 @@
     &-list {
         height: 100%;
         width: 100%;
+        max-width: 800px;
         display: flex;
         align-items: center;
+        justify-content: space-around;
         font-size: 1.2em;
-        margin: 0 10px 0 10px;
-        justify-content: space-between;
 
         &__link {
             display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+
+            @include mobile-breakpoint {
+                &-name {
+                    display: none;
+                }
+            }
+
+
 
             &:hover {
-                color: $tertiary
+                color: $tertiary;
+                background-color: $secondary;
+            }
+        }
+
+        &__icon {
+            height: 1.2em;
+            width: 1.2em;
+            margin-right: 5px;
+
+            @include mobile-breakpoint {
+                height: 2em;
+                width: 2em;
+                margin: 0;
             }
         }
 
         &__item {
-            margin: 0 20px 0 20px;
+            width: 100%;
+            height: 100%;
 
+            @include mobile-breakpoint {
+                & .icon {
+                    height: em;
+                }
+            }
         }
     }
 }

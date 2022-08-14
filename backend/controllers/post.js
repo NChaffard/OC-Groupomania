@@ -2,7 +2,6 @@
 // const mysql = require('mysql');
 const fs = require('fs');
 const db = require('../utils/db');
-const Post = require('../models/Post')
 
 // -------------------Database Functions-----------------------------------------------
 async function dbQuery(queryType, args) {
@@ -13,8 +12,7 @@ async function dbQuery(queryType, args) {
 
 // Create post
 exports.createPost = (req, res, next) => {
-    let post = new Post;
-    post = {
+    let post = {
         name: req.auth.name,
         userId: req.auth.userId,
         likes: JSON.stringify([]),
@@ -36,7 +34,6 @@ exports.createPost = (req, res, next) => {
 
 // Read posts
 exports.getPosts = (req, res, next) => {
-    let post = new Post;
     // If req.params.id doesn't exists, return all posts
     req.params.id ? id = req.params.id : id = -1
     dbQuery("select", { "id": id })
@@ -48,76 +45,67 @@ exports.getPosts = (req, res, next) => {
             res.status(400).json({ message: " error: " + error })
         });
 };
-async function deleteImage(filename) {
-    await fs.unlink(`images/${filename}`, (error) => {
-        if (error) {
-            console.log(error);
-        }
-        else {
-            console.log("Image deleted successfully");
-        }
-    })
-}
 
 // Update a post
 exports.updatePost = (req, res, next) => {
-    // Create an object Post
-    let post = new Post;
+    // Verify if the post is user's post or the user is admin
+    if (req.auth.userId === parseInt(req.body.userId) || req.auth.isAdmin) {
 
-    // Fill it
-    post = {
-        id: req.params.id,
-        name: req.body.name,
-        userId: req.body.userId,
-        likes: JSON.stringify(req.body.likes),
-        dislikes: JSON.stringify(req.body.dislikes),
-        ...req.body
-    }
-    post.id = parseInt(post.id)
-    post.userId = parseInt(post.userId)
-    // If  there is a file transmitted in the form or the deleteImage input
-    if (req.file || req.body.deleteImage) {
-        // If there is a previous image in post delete it
-        if (req.body.imageUrl) {
-            const filename = req.body.imageUrl.split('/images/')[1]
-            fs.unlink(`images/${filename}`, (error) => {
-                if (error) {
-                    console.log(error);
-                }
-                else {
-                    console.log("Image deleted successfully");
-                }
-            })
-        }
-        // If there is a new image, get the url for the db
-        if (req.file) {
-            post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 
-        } else
-        // Else the imageUrl is null
-        {
-            post.imageUrl = null
+        let post = {
+            id: req.params.id,
+            name: req.body.name,
+            userId: req.body.userId,
+            likes: JSON.stringify(req.body.likes),
+            dislikes: JSON.stringify(req.body.dislikes),
+            ...req.body
         }
+        post.id = parseInt(post.id)
+        post.userId = parseInt(post.userId)
+        // If  there is a file transmitted in the form or the deleteImage input
+        if (req.file || req.body.deleteImage) {
+            // If there is a previous image in post delete it
+            if (req.body.imageUrl) {
+                const filename = req.body.imageUrl.split('/images/')[1]
+                fs.unlink(`images/${filename}`, (error) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                    else {
+                        console.log("Image deleted successfully");
+                    }
+                })
+            }
+            // If there is a new image, get the url for the db
+            if (req.file) {
+                post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+
+            } else
+            // Else the imageUrl is null
+            {
+                post.imageUrl = null
+            }
+        }
+        // Update db
+        dbQuery("update", post)
+            // Then return post updated
+            .then(() => { res.status(201).json(post) })
+            .catch((error) => { res.status(400).json({ message: " error: " + error }) });
+    } else {
+        res.status(400).json({ message: 'Unauthorized request !' });
     }
-    // Update db
-    dbQuery("update", post)
-        // Then return post updated
-        .then(() => { res.status(201).json(post) })
-        .catch((error) => { res.status(400).json({ message: " error: " + error }) });
 };
 
 exports.likePost = (req, res, next) => {
     // Prepare variables
     const userId = req.auth.userId;
     const like = parseInt(req.body.like)
-    // Create an object Post
-    let post = new Post;
 
     // Get the post datas from db
     dbQuery("select", { "id": req.params.id })
         .then((response) => {
             // Then fill the post object with the response
-            post = {
+            let post = {
                 ...response[0],
                 likes: JSON.parse(response[0].likes),
                 dislikes: JSON.parse(response[0].dislikes)
@@ -132,7 +120,7 @@ exports.likePost = (req, res, next) => {
             }
             post.likes = JSON.stringify(post.likes)
             post.dislikes = JSON.stringify(post.dislikes)
-            dbQuery("update", post)
+            dbQuery("like", post)
                 .then(() => { res.status(201).json(post) })
                 .catch((error) => { res.status(400).json({ message: " error: " + error }) });
         }).catch((error) => { res.status(400).json({ message: " error: " + error }) });
@@ -158,7 +146,6 @@ exports.deletePost = (req, res, next) => {
                         }
                     })
                 }
-
                 dbQuery("delete", { "id": req.params.id })
                     .then(() => { res.status(201).json({ message: "Post deleted successfully !!" }); })
                     .catch((error) => {

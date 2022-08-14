@@ -10,7 +10,7 @@
 }
 
 
-.card {
+.post {
     background-color: white;
     margin: 20px 0 20px 0;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -21,16 +21,32 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+
+
+        &__author {
+            font-size: 1.5em;
+            margin: 0;
+        }
     }
 
-    &__author {
-        font-size: 1.5em;
-        margin: 0;
-    }
 
     &-main {
         display: flex;
         flex-direction: column;
+
+        &__text {
+            white-space: pre-wrap;
+            text-align: justify;
+            padding: 30px;
+            margin: 0;
+
+        }
+
+        &__img {
+            width: 100%;
+            align-self: center;
+            justify-self: center;
+        }
     }
 
     &-footer {
@@ -39,6 +55,60 @@
         justify-content: space-between;
         margin: 0 30px 0 30px;
         padding-bottom: 30px;
+
+        &-social {
+            display: flex;
+            align-items: center;
+
+            & button {
+                border: none;
+                background: transparent;
+                font-size: 1.1em;
+            }
+
+            &__like {
+                color: green;
+
+                &:hover {
+                    color: green;
+                }
+
+                &:disabled {
+                    color: rgba(0, 128, 0, 0.4);
+                }
+
+                &-icon {
+                    width: 1.4em;
+                    height: 1.4em
+                }
+            }
+
+            &__dislike {
+                color: red;
+                position: relative;
+                margin-left: 5px;
+
+                &-icon {
+                    width: 1.4em;
+                    height: 1.4em;
+                    position: absolute;
+                    bottom: -15px;
+                }
+
+                &-qty {
+                    margin-left: 25px;
+                }
+
+
+
+
+                &:disabled {
+                    color: rgba(255, 0, 0, 0.4);
+                }
+            }
+
+        }
+
 
         &__update {
             display: flex;
@@ -55,72 +125,6 @@
             }
         }
 
-    }
-
-    &__text {
-        white-space: pre-wrap;
-        text-align: justify;
-        padding: 30px;
-        margin: 0;
-
-    }
-
-    &__img {
-        max-width: 100%;
-        align-self: center;
-        justify-self: center;
-    }
-}
-
-.social {
-    display: flex;
-    align-items: center;
-
-    & button {
-        border: none;
-        background: transparent;
-        font-size: 1.1em;
-    }
-
-    &__like {
-        color: green;
-
-        &:hover {
-            color: green;
-        }
-
-        &:disabled {
-            color: rgba(0, 128, 0, 0.4);
-        }
-
-        &-icon {
-            width: 1.4em;
-            height: 1.4em
-        }
-    }
-
-    &__dislike {
-        color: red;
-        position: relative;
-        margin-left: 5px;
-
-        &-icon {
-            width: 1.4em;
-            height: 1.4em;
-            position: absolute;
-            bottom: -15px;
-        }
-
-        &-qty {
-            margin-left: 25px;
-        }
-
-
-
-
-        &:disabled {
-            color: rgba(255, 0, 0, 0.4);
-        }
     }
 
 }

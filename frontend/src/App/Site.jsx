@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { usePosts } from '../hooks/posts';
 import { Posts } from './Posts/Posts';
 import { CreatePostForm, UpdatePostForm } from './Posts/PostForm';
-import logo from '../assets/icon-left-font-monochrome-white.svg';
 import '../scss/site.scss';
 import { AddPost } from '../assets/AddPost';
 import { Logout } from '../assets/logout';
+import { Home } from '../assets/home';
 
 export function Site() {
 
@@ -52,13 +52,15 @@ export function Site() {
         <div className="wrapper">
             <header className="header">
                 <nav className="nav">
-                    <img className="nav__logo" src={logo} alt="Logo Groupomania" onClick={() => { navigate('/'); window.location.reload() }} />
                     <ul className="nav-list">
                         <li className="nav-list__item">
-                            <Link to="/add-post" className="nav-list__link" ><AddPost />Ajouter un post</Link>
+                            <Link to="/" className='nav-list__link' onClick={() => { navigate('/'); window.location.reload() }}><Home className='nav-list__icon' /><span className="nav-list__link-name">Accueil</span></Link>
                         </li>
-                        <li className="nav-list__item logout">
-                            <a href="/" className="nav-list__link" onClick={handleLogout}><Logout />Se déconnecter</a>
+                        <li className="nav-list__item">
+                            <Link to="/add-post" className="nav-list__link" ><AddPost className='nav-list__icon' /><span className="nav-list__link-name">Ajouter un post</span></Link>
+                        </li>
+                        <li className="nav-list__item">
+                            <a href="/" className="nav-list__link" onClick={handleLogout}><Logout className='nav-list__icon' /><span className="nav-list__link-name">Se déconnecter</span></a>
                         </li>
                     </ul>
                 </nav>

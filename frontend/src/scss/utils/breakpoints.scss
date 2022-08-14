@@ -1,0 +1,23 @@
+@import './variables.scss';
+
+@mixin mobile-breakpoint {
+    @media (max-width: $mobile-max) {
+        @content
+    }
+}
+
+;
+
+@mixin tablet-breakpoint {
+    @media (min-width: $mobile-max) and (max-width: $tablet-max) {
+        @content
+    }
+}
+
+;
+
+@mixin header-breakpoint {
+    @media (max-width: $logo-header-max) {
+        @content
+    }
+}

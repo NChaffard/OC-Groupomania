@@ -2,7 +2,7 @@ export function validateInput(input) {
     let msg;
     if (input.files) {
         let { name } = input
-        let { type, filename, size } = input.files[0]
+        let { type, size } = input.files[0]
         let isOk = false
         input.accept.split(',').map(a => a.trim() === type ? isOk = true : null)
         !isOk ? msg = { [name]: `Le format de fichier est invalide` } :
@@ -12,7 +12,11 @@ export function validateInput(input) {
 
 
         let { type, name, value } = input
+
         msg = { [name]: '' }
+        if (name === 'name') {
+            type = name
+        }
 
         const getRegexp = (type) => {
 
@@ -22,10 +26,12 @@ export function validateInput(input) {
                 case 'email':
                     regExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     break;
-                case 'password':
-                    regExp = /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,30}$/;
+                case 'name':
+                    regExp = /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s-]{3,30}$/;
                     break;
-
+                case 'password':
+                    regExp = /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,30}$/;
+                    break;
                 default:
                     regExp = /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s():;.,"!?-]{5,3000}$/;
 
