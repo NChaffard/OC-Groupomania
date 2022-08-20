@@ -1,24 +1,21 @@
 @import './utils/variables.scss';
 
 .form {
-    & input {
-        margin-top: 20px;
-        margin-left: 10px;
-    }
 
     & label {
-        font-size: 1.2em;
+        padding-right: 10px;
     }
 
 }
 
 .submit {
-    margin-top: 20px;
     border: none;
-    border-radius: 20px;
-    height: 40px;
-    width: 150px;
-    font-size: 1.4em;
+    font-size: $font-size-button;
+    padding: $font-size-button 0;
+    // border-radius: 20px;
+    // height: 40px;
+    // width: 150px;
+    // font-size: 1.4em;
 
     &:hover {
         background-color: $primary;

@@ -9,7 +9,7 @@
 .main {
     display: flex;
     justify-content: center;
-    background-color: #F7F8FA;
+    background-color: $background-color;
     min-height: 100vh;
 }
 
@@ -19,23 +19,23 @@
     justify-content: center;
     background-color: $primary;
     background-image: url('../assets/icon-left-font-monochrome-white.svg');
-
-    @include header-breakpoint {
-        background-image: url('../assets/icon-mini-blanc.png');
-    }
-
-    @include mobile-breakpoint {
-        background-image: none;
-    }
-
     background-size: contain;
     background-repeat: no-repeat;
-    height: 50px;
+    height: $nav-height;
 
-    &__logo {
-        cursor: pointer;
-        height: 100%;
+    &__mobile-logo {
+        display: none;
+    }
 
+    @include header-breakpoint {
+        background-image: none;
+        flex-direction: column;
+        height: $nav-height-mobile;
+
+        &__mobile-logo {
+            display: initial;
+            height: 100%;
+        }
     }
 
     &-list {
@@ -101,11 +101,14 @@
     font-size: 1.2em;
 }
 
-button:hover {
-    color: $primary;
-}
+
 
 .invalid-feedback {
     text-align: right;
     color: $primary;
+
+    @include mobile-breakpoint {
+
+        font-size: 0.8em;
+    }
 }

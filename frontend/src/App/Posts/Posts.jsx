@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { Loader } from '../../ui/Loader';
+// Imports utils
 import { dateFormat } from '../../utils/dateFormat';
+// Import css
 import '../../scss/posts.scss'
+// Import icons
+import { Loader } from '../../ui/Loader';
 import { Trash } from '../../assets/Trash';
 import { Pen } from '../../assets/Pen';
 import { Like } from '../../assets/Like';
-import { Dislike } from '../../assets/Dislike';
 
 export function Posts({ posts, onDelete, onUpdate, onLike }) {
     return <div className="posts" >
@@ -23,71 +24,72 @@ function PostsList({ posts, onDelete, onUpdate, onLike }) {
 }
 
 function Post({ post, onDelete, onUpdate, onLike }) {
+    // States
+    // Toggle showing or not update and delete buttons 
     const [showButtons, setShowButtons] = useState(false)
-    const [loading, setLoading] = useState(false)
+    // Set like state (0 or 1) for send to the API
     const [like, setLike] = useState(null)
-    const [likeButton, setLikeButton] = useState(null)
+    // Tell if the post is liked or not by the user
+    const [isLiked, setIsLiked] = useState(false)
+
+    // Used for navigate to other url
     const navigate = useNavigate()
 
+    // UseEffects
+
+    // Check like state
+    useEffect(function () {
+        if (like !== null) {
+            // If like is not null, send it
+            onLike(post, like).catch(() => { localStorage.clear(); window.location.reload() })
+        }
+    }, [like, onLike])
+
+    // Check if likes from post change 
+    useEffect(function () {
+        // If likes is not empty
+        if (JSON.parse(post.likes).length !== 0) {
+            // If the userId is in the likes object, set isLiked to true, else false
+            JSON.parse(post.likes).map(likeUserId => likeUserId === parseInt(localStorage.getItem('userId')) ? (setIsLiked(true)) : (setIsLiked(false)))
+        } else {
+            setIsLiked(false)
+        }
+
+    }, [post.likes])
+
+    // Check userId from post
+    useEffect(function () {
+        const isUserId = parseInt(localStorage.getItem('userId'))
+        const isAdmin = parseInt(localStorage.getItem('isAdmin'))
+        // If it's equal to the userId of the user or the user is an admin, set showButtons to true
+        if (isUserId === post.userId || isAdmin === 1) {
+            setShowButtons(true)
+        }
+    }, [post.userId])
+
+    // Handles
     const handleDelete = async function (e) {
         e.preventDefault()
-        setLoading(true)
-        await onDelete(post)
+
+        await onDelete(post).catch(() => { localStorage.clear(); window.location.reload() })
     }
 
     const handleLike = function (e) {
         e.preventDefault()
         // if there is a click on like button, check if the userId is already in the likes array, if so, setLike to 0, else set it to 1
         if (JSON.parse(post.likes).length !== 0) {
-            JSON.parse(post.likes).map(l => l === parseInt(localStorage.getItem('userId')) ? (setLike(0), setLikeButton(0)) : (setLike(1), setLikeButton(1)))
+            JSON.parse(post.likes).map(l => l === parseInt(localStorage.getItem('userId')) ? (setLike(0)) : (setLike(1)))
         } else {
             setLike(1)
-            setLikeButton(1)
         }
     }
 
-    const handleDislike = function (e) {
-        e.preventDefault()
-        // if there is a click on dislike button, check if the userId is already in the dislikes array, if so, setLike to 0, else set it to -1
-        if (JSON.parse(post.dislikes).length !== 0) {
-            JSON.parse(post.dislikes).map(l => l === parseInt(localStorage.getItem('userId')) ? (setLike(0), setLikeButton(0)) : (setLike(-1), setLikeButton(-1)))
-        } else {
-            setLike(-1)
-            setLikeButton(-1)
-        }
-
-    }
-
-    useEffect(function () {
-        if (like !== null) {
-            // If like is not null, send it
-            onLike(post, like)
-
-        }
-    }, [like, onLike])
-
-    useEffect(function () {
-        if (like === null) {
-            // On page loading, like is null so we check the likes and dislikes arrays to set likeButton
-            JSON.parse(post.likes).map(l => l === parseInt(localStorage.getItem('userId')) ?
-                setLikeButton(1) : JSON.parse(post.dislikes).map(l => l === parseInt(localStorage.getItem('userId')) ? setLikeButton(-1) : setLikeButton(0)))
-        }
-    })
-
-
-    useEffect(function () {
-        const isUserId = parseInt(localStorage.getItem('userId'))
-        const isAdmin = parseInt(localStorage.getItem('isAdmin'))
-        if (isUserId === post.userId || isAdmin === 1) {
-            setShowButtons(true)
-        }
-    }, [post.userId])
 
     return <li className="posts-list__item">
         <article className="post">
             <header className="post-header">
                 <h3 className="post-header__author">{post.name}</h3>
-                <div className="post-header__date">{dateFormat(post.time_stamp)}</div>
+                <div className="post-header__date">{dateFormat(post.created_at)}</div>
             </header>
             <main className="post-main">
                 {post.imageUrl ? <img className="post-main__img" src={post.imageUrl} alt="Illustration du post" /> : null}
@@ -95,20 +97,18 @@ function Post({ post, onDelete, onUpdate, onLike }) {
 
             </main>
             <footer className="post-footer">
-                <span className="post-footer-social">
-                    <button onClick={handleLike} disabled={likeButton === -1 ? true : false} className="post-footer-social__like">
-                        <Like className='post-footer-social__like-icon' />
+                <div className="post-footer-social">
+                    <button onClick={handleLike} className={isLiked ? "post-footer-social__like post-footer-social__like_liked" : "post-footer-social__like"}>
+                        <Like stroke='green' className='post-footer-social__like-icon' />
                     </button>
                     <span className="post-footer-social__like-qty">{JSON.parse(post.likes).length}</span>
-                    <button onClick={handleDislike} disabled={likeButton === 1 ? true : false} className="post-footer-social__dislike">
-                        <Dislike className='post-footer-social__dislike-icon' />
-                    </button>
-                    <span className="post-footer-social__dislike-qty">{JSON.parse(post.dislikes).length}</span>
-                </span>
-                {showButtons ? <div className="post-footer__update">
-                    <button className="btn post-footer__btn card-footer__btn-update" onClick={() => { onUpdate(post); navigate('/update-post') }}><Pen />Modifier</button>
-                    <button className="btn post-footer__btn card-footer__btn-delete" onClick={handleDelete} disabled={loading}><Trash />Supprimer</button>
-                </div> : null}
+                    {isLiked ? <span className='post-footer-social__liked'>Vous aimez ce post</span> : null}
+                </div>
+                {showButtons ?
+                    <div className="post-footer__update">
+                        <button className="btn post-footer__btn post-footer__btn-update" onClick={() => { onUpdate(post); navigate('/update-post') }}><Pen /><span className="post-footer__btn-text">Modifier</span></button>
+                        <button className="btn post-footer__btn post-footer__btn-delete" onClick={handleDelete}><Trash /><span className="post-footer__btn-text">Supprimer</span></button>
+                    </div> : null}
             </footer>
 
         </article>

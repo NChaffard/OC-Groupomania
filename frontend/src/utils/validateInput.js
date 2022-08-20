@@ -4,7 +4,9 @@ export function validateInput(input) {
         let { name } = input
         let { type, size } = input.files[0]
         let isOk = false
+        // Check the accept attribute from input and compare it with the type attribute to know if the file is authorized
         input.accept.split(',').map(a => a.trim() === type ? isOk = true : null)
+        // If it's ok, check the size
         !isOk ? msg = { [name]: `Le format de fichier est invalide` } :
             size >= 10000000 ? msg = { [name]: 'Le fichier est trop lourd' } : msg = { [name]: '' }
 

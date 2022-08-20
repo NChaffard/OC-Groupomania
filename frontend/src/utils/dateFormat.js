@@ -1,8 +1,21 @@
 export function dateFormat(date) {
-    const day = date.split('T')[0].split('-')[2]
-    const month = date.split('T')[0].split('-')[1]
-    const year = date.split('T')[0].split('-')[0]
-    const time = date.split('T')[1].split('.')[0]
+    const d = new Date(date)
+    const formatedDate = d.toLocaleString('fr-FR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+        // hour: 'numeric',
+        // minute: 'numeric',
+        // second: 'numeric'
+    })
+    const formatedTime = d.toLocaleString('fr-FR', {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
 
-    return 'Le ' + day + '-' + month + '-' + year + ' à ' + time
+    })
+
+
+    return <><span className="post-header__date-date"> {formatedDate} </span> à <span className="post-header__date-time">{formatedTime}</span></>
 }

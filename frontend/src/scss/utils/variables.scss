@@ -1,16 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+
 // Fonts
 $font : 'Lato',
 sans-serif;
-// Colors
+$font-size-button: 1em;
 
+// Colors
 $primary : #FD2D01;
 $secondary : #FFD7D7;
 $tertiary : #4E5166;
 
 $secondary-transparent : #ffd7d791;
 
+$background-color: #F7F8FA;
+
 // Breakpoints
 $mobile-max : 768px;
 $tablet-max : 996px;
 $logo-header-max: 1400px;
+$text-area-max: 800px;
+
+// Nav
+$nav-height: 50px;
+$nav-height-mobile: 70px;

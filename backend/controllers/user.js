@@ -39,7 +39,7 @@ exports.signup = (req, res, next) => {
                     isAdmin: 0
                   },
                   process.env.TOKEN_SECRET,
-                  { expiresIn: '24h' }
+                  { expiresIn: '1h' }
                 )
               })
             })
@@ -77,7 +77,7 @@ exports.login = (req, res, next) => {
                   isAdmin: user.isAdmin
                 },
                 process.env.TOKEN_SECRET,
-                { expiresIn: '24h' }
+                { expiresIn: '1h' }
               )
             }
             );

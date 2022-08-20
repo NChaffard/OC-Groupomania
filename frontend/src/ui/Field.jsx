@@ -12,7 +12,7 @@ export function Field({ name, children, type = 'text', error, className = 'form-
         {type === 'textarea' ?
             <textarea name={name} id={name} className={`${className}__input${error ? ' is-invalid' : ''}`} {...props} /> :
             <input type={type} name={name} id={name} className={`${className}__input${error ? ' is-invalid' : ''}`} {...props} />}
-        {error && <div className="invalid-feedback">{error}</div>}
+        {error && <div className={`invalid-feedback ${className}__invalid-feedback`}>{error}</div>}
     </div>
 }
 

@@ -14,7 +14,7 @@ export default function App() {
     }, [])
     return (
         <BrowserRouter>
-            {user ? <Site /> : <LoginForm onConnect={setUser} />}
+            {user ? <Site userData={user} /> : <LoginForm onConnect={setUser} />}
 
         </BrowserRouter>
     );

@@ -2,41 +2,6 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Structure
-
-App
-- token
-
-LoginForm
-- error
-- loading
-- < onConnect(token)
-
-Site
-- > token
-- page
-- posts
-- currentPost
-
-Posts
-- > token
-- > posts
-
-Post
-- > token
-- > userId
-- > id
-- > post
-
-PostEditForm
-- > token
-- > post
-- < onSubmit(post, newPost)
-
-PostCreateForm
-- > token
-- < onSubmit(newPost)
-
 ## Available Scripts
 
 In the project directory, you can run:

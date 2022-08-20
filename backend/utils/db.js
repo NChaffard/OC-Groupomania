@@ -16,14 +16,14 @@ module.exports = {
                     query = mysql.format(queryBase, [table, "id", args.id]);
                 }
                 else {
-                    return { status: 400, message: "The requested email is not valid !!" };
+                    return { status: 400, message: "The request is not valid !!" };
                 }
             }
             else if (table == "posts") {
                 if (args) {
-                    const queryBaseEnd = args.id === -1 ? 'ORDER BY `time_stamp` DESC' : 'WHERE ?? = ?';
-                    const queryBase = 'SELECT ??, ??, ??, ??, ??, ??, ??, ?? FROM ?? LEFT JOIN ?? ON ?? = ?? ' + queryBaseEnd;
-                    query = mysql.format(queryBase, ["posts.id", "posts.text", "posts.imageUrl", "posts.time_stamp", "posts.likes", "posts.dislikes", "posts.userId", "users.name", table, "users", "users.id", "posts.userId", "posts.id", args.id = args.id]);
+                    const queryBaseEnd = args.id === -1 ? 'ORDER BY `created_at` DESC' : 'WHERE ?? = ?';
+                    const queryBase = 'SELECT ??, ??, ??, ??, ??, ??, ?? FROM ?? LEFT JOIN ?? ON ?? = ?? ' + queryBaseEnd;
+                    query = mysql.format(queryBase, ["posts.id", "posts.text", "posts.imageUrl", "posts.created_at", "posts.likes", "posts.userId", "users.name", table, "users", "users.id", "posts.userId", "posts.id", args.id = args.id]);
                 }
                 else {
                     return { status: 400, message: "The request is not valid !!" };
@@ -40,7 +40,7 @@ module.exports = {
             }
             else if (table == 'posts') {
                 const queryBase = 'INSERT INTO ?? (??,??,??,??,??) VALUES (?,?,?,?,?)';
-                query = mysql.format(queryBase, [table, "userId", "text", "imageUrl", "likes", "dislikes", args.userId, args.text, args.imageUrl, args.likes, args.dislikes]);
+                query = mysql.format(queryBase, [table, "userId", "text", "imageUrl", "likes", "created_at", args.userId, args.text, args.imageUrl, args.likes, args.created_at]);
             }
             else {
                 return { status: 400, message: "The requested table is not valid !!" };
@@ -71,8 +71,8 @@ module.exports = {
         // Only update likes and dislikes in db
         if (queryType === 'like') {
             if (args) {
-                const queryBase = 'UPDATE ?? SET ?? = ?, ??= ? WHERE ??= ?'
-                query = mysql.format(queryBase, [table, "likes", args.likes, "dislikes", args.dislikes, "id", args.id])
+                const queryBase = 'UPDATE ?? SET ?? = ? WHERE ??= ?'
+                query = mysql.format(queryBase, [table, "likes", args.likes, "id", args.id])
             }
             else {
                 return { status: 400, message: "The request is  not valid !!" };

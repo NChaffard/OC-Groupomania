@@ -9,7 +9,7 @@
 ;
 
 @mixin tablet-breakpoint {
-    @media (min-width: $mobile-max) and (max-width: $tablet-max) {
+    @media (max-width: $tablet-max) {
         @content
     }
 }
@@ -21,3 +21,13 @@
         @content
     }
 }
+
+;
+
+@mixin text-area-breakpoint {
+    @media (max-width: $text-area-max) {
+        @content
+    }
+}
+
+;

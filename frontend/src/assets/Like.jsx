@@ -1,9 +1,10 @@
-export const Like = ({ className = "icon" }) => {
+export const Like = ({ className = "icon", stroke = null }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             className={className}
+            stroke={stroke}
         >
             <path
                 fill="currentColor"

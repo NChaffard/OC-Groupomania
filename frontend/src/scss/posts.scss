@@ -1,8 +1,13 @@
 @import './utils/variables.scss';
+@import './utils/breakpoints.scss';
 
 
 .posts {
-    margin-top: 60px;
+    margin-top: $nav-height + 20px;
+
+    @include header-breakpoint {
+        margin-top: $nav-height-mobile + 20;
+    }
 
     &-list {
         max-width: 800px;
@@ -12,7 +17,7 @@
 
 .post {
     background-color: white;
-    margin: 20px 0 20px 0;
+    margin-bottom: 20px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 
     &-header {
@@ -26,6 +31,13 @@
         &__author {
             font-size: 1.5em;
             margin: 0;
+        }
+
+        &__date {
+            &-date {
+
+                text-transform: capitalize;
+            }
         }
     }
 
@@ -44,6 +56,8 @@
 
         &__img {
             width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
             align-self: center;
             justify-self: center;
         }
@@ -52,79 +66,84 @@
     &-footer {
 
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         margin: 0 30px 0 30px;
-        padding-bottom: 30px;
 
         &-social {
             display: flex;
             align-items: center;
-
-            & button {
-                border: none;
-                background: transparent;
-                font-size: 1.1em;
-            }
+            padding-bottom: 30px;
 
             &__like {
-                color: green;
+                border: none;
+                background: transparent;
+                color: transparent;
 
-                &:hover {
-                    color: green;
-                }
-
-                &:disabled {
-                    color: rgba(0, 128, 0, 0.4);
+                & :hover {
+                    opacity: 0.8;
                 }
 
                 &-icon {
-                    width: 1.4em;
-                    height: 1.4em
+                    width: 2em;
+                    height: 2em;
+                }
+
+                &_liked {
+                    color: green;
                 }
             }
 
-            &__dislike {
-                color: red;
-                position: relative;
-                margin-left: 5px;
+            &__liked {
+                margin-left: 20px;
+                color: $tertiary;
 
-                &-icon {
-                    width: 1.4em;
-                    height: 1.4em;
-                    position: absolute;
-                    bottom: -15px;
-                }
-
-                &-qty {
-                    margin-left: 25px;
-                }
-
-
-
-
-                &:disabled {
-                    color: rgba(255, 0, 0, 0.4);
-                }
             }
 
         }
+
 
 
         &__update {
             display: flex;
+            align-items: center;
+            margin: 0 -30px;
         }
 
         &__btn {
-            margin-left: 10px;
             display: flex;
+            width: 50%;
+            padding: $font-size-button 0;
+            justify-content: center;
+
+            @include mobile-breakpoint {
+                &>.icon {
+                    width: 1.5em;
+                    height: 1.5em;
+                }
+            }
+
+            &:hover {
+                background-color: $secondary;
+            }
+
+            &-text {
+                @include mobile-breakpoint {
+                    display: none;
+                }
+            }
 
             &-update {
                 &:hover {
                     color: blue;
                 }
             }
-        }
 
+            &-delete {
+                &:hover {
+                    color: $primary;
+                }
+            }
+        }
     }
 
 }

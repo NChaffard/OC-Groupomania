@@ -5,17 +5,31 @@ import { useState } from 'react';
 import { usePosts } from '../hooks/posts';
 import { Posts } from './Posts/Posts';
 import { CreatePostForm, UpdatePostForm } from './Posts/PostForm';
+
+// css
 import '../scss/site.scss';
+
+// Icons
 import { AddPost } from '../assets/AddPost';
 import { Logout } from '../assets/logout';
 import { Home } from '../assets/home';
 
-export function Site() {
+// Images
+import logo from '../assets/icon-left-font-monochrome-white.svg';
 
+export function Site(userData) {
+    // States
+
+    // Contain post to modify
     const [post, setPost] = useState(null)
+
+    // Contain current url
     const { pathname } = useLocation()
+
+    // Used for navigate to other url
     const navigate = useNavigate()
 
+    // Import obect and method from posts hook
     const {
         posts,
         fetchPosts,
@@ -25,6 +39,15 @@ export function Site() {
         likePost
     } = usePosts()
 
+    // UseEffects
+
+    useEffect(function () {
+        if (pathname === '/') {
+            fetchPosts()
+        }
+    })
+
+    // Handles
     const handleCreate = async function (data) {
         await createPost(data)
         navigate('/')
@@ -41,17 +64,13 @@ export function Site() {
         navigate('/');
     }
 
-    useEffect(function () {
-        if (pathname === '/') {
-            fetchPosts()
-        }
-    })
 
 
     return (
         <div className="wrapper">
             <header className="header">
                 <nav className="nav">
+                    <img className="nav__mobile-logo" src={logo} alt="Logo Groupomania" />
                     <ul className="nav-list">
                         <li className="nav-list__item">
                             <Link to="/" className='nav-list__link' onClick={() => { navigate('/'); window.location.reload() }}><Home className='nav-list__icon' /><span className="nav-list__link-name">Accueil</span></Link>

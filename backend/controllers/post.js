@@ -12,21 +12,22 @@ async function dbQuery(queryType, args) {
 
 // Create post
 exports.createPost = (req, res, next) => {
+    // Prepare post datas
     let post = {
         name: req.auth.name,
         userId: req.auth.userId,
         likes: JSON.stringify([]),
-        dislikes: JSON.stringify([]),
+        created_at: new Date(),
         ...req.body
     }
     if (req.file) {
-
+        // If there is an image, set imageUrl
         post.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     }
+    // Then create post in db
     dbQuery("create", post)
         .then((response) => {
             post.id = response.insertId;
-            post.time_stamp = new Date();
             res.status(201).json(post);
         })
         .catch((error) => { res.status(400).json({ message: " error: " + error }) });
@@ -51,13 +52,11 @@ exports.updatePost = (req, res, next) => {
     // Verify if the post is user's post or the user is admin
     if (req.auth.userId === parseInt(req.body.userId) || req.auth.isAdmin) {
 
-
         let post = {
             id: req.params.id,
             name: req.body.name,
             userId: req.body.userId,
             likes: JSON.stringify(req.body.likes),
-            dislikes: JSON.stringify(req.body.dislikes),
             ...req.body
         }
         post.id = parseInt(post.id)
@@ -108,18 +107,18 @@ exports.likePost = (req, res, next) => {
             let post = {
                 ...response[0],
                 likes: JSON.parse(response[0].likes),
-                dislikes: JSON.parse(response[0].dislikes)
             }
-            if ((post.likes = post.likes.filter(u => parseInt(u) !== userId)) && (post.dislikes = post.dislikes.filter(u => parseInt(u) !== userId))) {
-                // if there is a like or a dislike, remove it from post
+            if (post.likes = post.likes.filter(u => parseInt(u) !== userId)) {
+                // if there is a like, remove it from post
             } else {
                 res.status(400).json({ message: " error: " + error })
             }
-            if ((like === 1 && post.likes.push(userId)) || ((like === -1 && post.dislikes.push(userId)))) {
-                // UserId pushed in like or dislike
+            if (like === 1) {
+                // UserId pushed in like
+                post.likes.push(userId)
             }
+            // Stringify likes for the db update
             post.likes = JSON.stringify(post.likes)
-            post.dislikes = JSON.stringify(post.dislikes)
             dbQuery("like", post)
                 .then(() => { res.status(201).json(post) })
                 .catch((error) => { res.status(400).json({ message: " error: " + error }) });
