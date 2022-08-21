@@ -119,6 +119,7 @@ function PostForm({ post = null, onSubmit }) {
             if (post && post.imageUrl && deleteImage === true) {
                 data.append('deleteImage', 'true')
             }
+            // Submit the post to the API, if it return an error, clear the localStorage and reload the page
             await onSubmit(data).catch(() => { localStorage.clear(); window.location.reload() })
         }
         // If there is an error, Alert the user

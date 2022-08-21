@@ -40,10 +40,12 @@ function Post({ post, onDelete, onUpdate, onLike }) {
     // Check like state
     useEffect(function () {
         if (like !== null) {
-            // If like is not null, send it
+            // If like is not null, send it, if it return an error, clear the localStorage and reload the page
             onLike(post, like).catch(() => { localStorage.clear(); window.location.reload() })
+            // then set it to null
+            setLike(null)
         }
-    }, [like, onLike])
+    }, [like, onLike, post])
 
     // Check if likes from post change 
     useEffect(function () {
@@ -70,7 +72,7 @@ function Post({ post, onDelete, onUpdate, onLike }) {
     // Handles
     const handleDelete = async function (e) {
         e.preventDefault()
-
+        // delete the post,  if it return an error, clear the localStorage and reload the page
         await onDelete(post).catch(() => { localStorage.clear(); window.location.reload() })
     }
 

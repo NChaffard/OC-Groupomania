@@ -1,12 +1,17 @@
 # P7-Groupomania
 
+
+
 ## Backend install
+
 
 ### `npm install`
 In backend directory, npm install install the frontend
 
+
 ### DotEnv
 make a .env file in backend folder then fill it with the parameters below
+
 
 #### DotEnv content
 
@@ -34,10 +39,49 @@ DB_DATABASE =
 
 
 
+## Database
+
+
+### 2 tables
+
+
+#### posts
+
+Column name | Data Type  | Options                                       | Default/Expression
+-------------------------------------------------------------------------------------------
+id          |  INT       | primary key, not null, unique, auto increment |
+userId      |  INT       | not null                                      |
+text        |  TEXT      | not null                                      |
+imageUrl    |  TEXT      |                                               | NULL
+likes       | MEDIUMTEXT | not null                                      |
+created_at  | DATETIME   |                                               |
+
+
+
+#### users
+
+Column name | Data Type     | Options                                       | Default/Expression
+-------------------------------------------------------------------------------------------
+id          |  INT          | primary key, not null, unique, auto increment |
+name        |  VARCHAR(100) | not null, unique                              |
+email       |  VARCHAR(255) | not null, unique                              |
+password    |  TEXT         | not null                                      |
+isAdmin     |  INT          | not null                                      | 0
+
+
+
+
+
+
+
+
+
 ## Frontend install
 
+
+
 ### `npm install`
-In frontend directory, npm install insatll the frontend
+In frontend directory, npm install install the frontend
 
 ### `npm start`
 
