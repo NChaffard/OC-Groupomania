@@ -1,40 +1,40 @@
-# `P7-Groupomania`
+# P7-Groupomania
 
-## `Backend install`
+## Backend install
 
 ### `npm install`
 In backend directory, this command install the frontend
 
 
-## `node server`: 
+## `node server`
 Start the server
 
-### `DotEnv`
+### DotEnv
 make a .env file in backend folder then fill it with the parameters below
 
 
 #### DotEnv content
 
 - Port for the backend app
-PORT = 
+- - PORT = 
 
 - Origin request adress from frontend
-ORIGIN_REQ_ADDRESS = 
+- - ORIGIN_REQ_ADDRESS = 
 
 - Token salt for JWT
-TOKEN_SECRET = 
+- - TOKEN_SECRET = 
 
 - Database host
-DB_HOST = 
+- - DB_HOST = 
 
 - Database user
-DB_USER =
+- - DB_USER =
 
 - Database password
-DB_PASSWORD = 
+- - DB_PASSWORD = 
 
 - Database name
-DB_DATABASE =
+- - DB_DATABASE =
 
 
 
