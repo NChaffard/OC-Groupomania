@@ -100,7 +100,7 @@ function Post({ post, onDelete, onUpdate, onLike }) {
             </main>
             <footer className="post-footer">
                 <div className="post-footer-social">
-                    <button onClick={handleLike} className={isLiked ? "post-footer-social__like post-footer-social__like_liked" : "post-footer-social__like"}>
+                    <button aria-label="bouton like" onClick={handleLike} className={isLiked ? "post-footer-social__like post-footer-social__like_liked" : "post-footer-social__like"}>
                         <Like stroke='green' className='post-footer-social__like-icon' />
                     </button>
                     <span className="post-footer-social__like-qty">{JSON.parse(post.likes).length}</span>
@@ -108,8 +108,8 @@ function Post({ post, onDelete, onUpdate, onLike }) {
                 </div>
                 {showButtons ?
                     <div className="post-footer__update">
-                        <button className="btn post-footer__btn post-footer__btn-update" onClick={() => { onUpdate(post); navigate('/update-post') }}><Pen /><span className="post-footer__btn-text">Modifier</span></button>
-                        <button className="btn post-footer__btn post-footer__btn-delete" onClick={handleDelete}><Trash /><span className="post-footer__btn-text">Supprimer</span></button>
+                        <button aria-label="bouton modifier" className="btn post-footer__btn post-footer__btn-update" onClick={() => { onUpdate(post); navigate('/update-post') }}><Pen /><span className="post-footer__btn-text">Modifier</span></button>
+                        <button aria-label="bouton supprimer" className="btn post-footer__btn post-footer__btn-delete" onClick={handleDelete}><Trash /><span className="post-footer__btn-text">Supprimer</span></button>
                     </div> : null}
             </footer>
 

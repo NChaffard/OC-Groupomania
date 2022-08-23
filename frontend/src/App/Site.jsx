@@ -73,13 +73,13 @@ export function Site(userData) {
                     <img className="nav__mobile-logo" src={logo} alt="Logo Groupomania" />
                     <ul className="nav-list">
                         <li className="nav-list__item">
-                            <Link to="/" className='nav-list__link' onClick={() => { navigate('/'); window.location.reload() }}><Home className='nav-list__icon' /><span className="nav-list__link-name">Accueil</span></Link>
+                            <Link to="/" className='nav-list__link' aria-label='Accueil' onClick={() => { navigate('/'); window.location.reload() }}><Home className='nav-list__icon' /><span className="nav-list__link-name">Accueil</span></Link>
                         </li>
                         <li className="nav-list__item">
-                            <Link to="/add-post" className="nav-list__link" ><AddPost className='nav-list__icon' /><span className="nav-list__link-name">Ajouter un post</span></Link>
+                            <Link to="/add-post" className="nav-list__link" aria-label='Ajouter un post'><AddPost className='nav-list__icon' /><span className="nav-list__link-name">Ajouter un post</span></Link>
                         </li>
                         <li className="nav-list__item">
-                            <a href="/" className="nav-list__link" onClick={handleLogout}><Logout className='nav-list__icon' /><span className="nav-list__link-name">Se déconnecter</span></a>
+                            <a href="/" className="nav-list__link" aria-label='Se déconnecter' onClick={handleLogout}><Logout className='nav-list__icon' /><span className="nav-list__link-name">Se déconnecter</span></a>
                         </li>
                     </ul>
                 </nav>

@@ -97,9 +97,6 @@
             grid-template-columns: 20% 80%;
         }
 
-
-
-
         &__label {
             text-align: end;
             align-self: center;
@@ -223,18 +220,18 @@
 
         &-button {
             background: none;
-            color: $primary;
+            color: black;
             font-size: 1.4em;
             border: none;
             padding: 0 10px 0 10px;
 
             &:hover {
-                color: $tertiary;
+                color: $primary;
             }
 
 
             &_on {
-                color: $tertiary;
+                color: black;
 
                 &:hover {
                     color: $primary;
