@@ -10,18 +10,19 @@ import { CreatePostForm, UpdatePostForm } from './Posts/PostForm';
 import '../scss/site.scss';
 
 // Icons
-import { AddPost } from '../assets/AddPost';
-import { Logout } from '../assets/logout';
-import { Home } from '../assets/home';
+import { AddPost, Logout, Home } from '../assets/Icons';
 
 // Images
 import logo from '../assets/icon-left-font-monochrome-white.svg';
 
-export function Site(userData) {
-    // States
+export function Site() {
+
 
     // Contain post to modify
     const [post, setPost] = useState(null)
+
+    // Used to refresh posts
+    const [refresh, setRefresh] = useState(false)
 
     // Contain current url
     const { pathname } = useLocation()
@@ -29,10 +30,11 @@ export function Site(userData) {
     // Used for navigate to other url
     const navigate = useNavigate()
 
-    // Import obect and method from posts hook
+    // Import object and method from posts hook
     const {
         posts,
         fetchPosts,
+        resetPosts,
         deletePost,
         createPost,
         updatePost,
@@ -42,9 +44,18 @@ export function Site(userData) {
     // UseEffects
 
     useEffect(function () {
-        if (pathname === '/') {
-            fetchPosts()
+        // If refresh is true, reset the posts 
+        if (pathname === '/' && posts !== null && refresh === true) {
+            resetPosts()
+            setRefresh(false)
         }
+
+    }, [pathname, posts, refresh, resetPosts])
+
+    useEffect(function () {
+        // fetchposts works if posts is null
+        fetchPosts().catch(() => { localStorage.clear(); window.location.reload() })
+
     })
 
     // Handles
@@ -73,7 +84,7 @@ export function Site(userData) {
                     <img className="nav__mobile-logo" src={logo} alt="Logo Groupomania" />
                     <ul className="nav-list">
                         <li className="nav-list__item">
-                            <Link to="/" className='nav-list__link' aria-label='Accueil' onClick={() => { navigate('/'); window.location.reload() }}><Home className='nav-list__icon' /><span className="nav-list__link-name">Accueil</span></Link>
+                            <Link to="/" className='nav-list__link' aria-label='Accueil' onClick={() => setRefresh(true)} ><Home className='nav-list__icon' /><span className="nav-list__link-name">Accueil</span></Link>
                         </li>
                         <li className="nav-list__item">
                             <Link to="/add-post" className="nav-list__link" aria-label='Ajouter un post'><AddPost className='nav-list__icon' /><span className="nav-list__link-name">Ajouter un post</span></Link>

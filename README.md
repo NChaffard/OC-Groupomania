@@ -6,7 +6,7 @@
 In backend directory, this command install the frontend
 
 
-## `node server`
+### `node server`
 Start the server
 
 ### DotEnv

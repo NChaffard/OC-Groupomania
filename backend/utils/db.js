@@ -4,7 +4,9 @@ const mysql = require('mysql');
 // Connexion to database
 const pool = require('./dbconnect');
 module.exports = {
+    // Query to dataBase, queryType and table are string, args is an object
     dbQuery(queryType, table, args) {
+
         if (queryType == 'select') {
             if (table == "users") {
                 if (args.email) {
@@ -56,14 +58,6 @@ module.exports = {
                     return { message: "The request is not valid !!" };
                 }
             }
-            else if (table == "users") {
-                if (args) {
-                    const queryBase = "UPDATE ?? SET ?? = ?, ?? = ?, ?? = ? WHERE ?? = ?";
-                    query = mysql.format(queryBase, [table, "email", args.email, "name", args.name, "password", args.password, "id", args.id]);
-                } else {
-                    return { message: "The request is not valid !!" };
-                }
-            }
             else {
                 return { status: 400, message: "The requested table is not valid !!" };
             }
@@ -83,14 +77,9 @@ module.exports = {
                 const queryBase = 'DELETE FROM ?? WHERE ?? = ?';
                 query = mysql.format(queryBase, [table, "id", args.id]);
             }
-            else if (table == "users") {
-                const queryBase = "DELETE FROM ?? WHERE ?? = ?";
-                query = mysql.format(queryBase, [table, "id", args.id]);
-            }
-            else {
-                return { status: 400, message: "The requested table is not valid !!" };
-            }
         }
+
+        // When query is prepared, send it to dataBase
         return new Promise((resolve, reject) => {
             pool.query(query, (err, response) => {
                 if (err) {

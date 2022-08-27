@@ -8,14 +8,13 @@ export default function App() {
     const [user, setUser] = useState(null)
 
     useEffect(function () {
-        apiFetch('/auth/me',)
+        apiFetch('/auth/me')
             .then(setUser)
             .catch(() => setUser(null))
     }, [])
     return (
         <BrowserRouter>
-            {user ? <Site userData={user} /> : <LoginForm onConnect={setUser} />}
-
+            {user ? <Site /> : <LoginForm onConnect={setUser} />}
         </BrowserRouter>
     );
 }

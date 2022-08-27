@@ -6,9 +6,7 @@ import { dateFormat } from '../../utils/dateFormat';
 import '../../scss/posts.scss'
 // Import icons
 import { Loader } from '../../ui/Loader';
-import { Trash } from '../../assets/Trash';
-import { Pen } from '../../assets/Pen';
-import { Like } from '../../assets/Like';
+import { Trash, Pen, Like } from '../../assets/Icons';
 
 export function Posts({ posts, onDelete, onUpdate, onLike }) {
     return <div className="posts" >

@@ -5,13 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react'
 // Loading ui elements
 import { Field } from '../../ui/Field';
+// Loading utils
+import { formValidation, validateInput } from '../../utils/validateInput';
+
 // Loading css
 import '../../scss/form.scss'
 import '../../scss/postForm.scss'
 // Loding assets
-import { Trash } from '../../assets/Trash';
-import { AddImage } from '../../assets/AddImage';
-import { formValidation, validateInput } from '../../utils/validateInput';
+import { Trash, AddImage } from '../../assets/Icons'
 
 
 export function CreatePostForm({ onSubmit }) {

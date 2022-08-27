@@ -4,6 +4,7 @@ const fs = require('fs');
 const db = require('../utils/db');
 
 // -------------------Database Functions-----------------------------------------------
+// queryType accept string, args is an object containing arguments for the query
 async function dbQuery(queryType, args) {
     return await db.dbQuery(queryType, table = 'posts', args);
 }
@@ -11,7 +12,7 @@ async function dbQuery(queryType, args) {
 // ----------------Ends of functions---------------------------------------
 
 // Create post
-exports.createPost = (req, res, next) => {
+exports.createPost = (req, res) => {
     // Prepare post datas
     let post = {
         name: req.auth.name,
@@ -34,7 +35,7 @@ exports.createPost = (req, res, next) => {
 };
 
 // Read posts
-exports.getPosts = (req, res, next) => {
+exports.getPosts = (req, res) => {
     // If req.params.id doesn't exists, return all posts
     req.params.id ? id = req.params.id : id = -1
     dbQuery("select", { "id": id })
@@ -48,7 +49,7 @@ exports.getPosts = (req, res, next) => {
 };
 
 // Update a post
-exports.updatePost = (req, res, next) => {
+exports.updatePost = (req, res) => {
     // Verify if the post is user's post or the user is admin
     if (req.auth.userId === parseInt(req.body.userId) || req.auth.isAdmin) {
 
@@ -95,7 +96,7 @@ exports.updatePost = (req, res, next) => {
     }
 };
 
-exports.likePost = (req, res, next) => {
+exports.likePost = (req, res) => {
     // Prepare variables
     const userId = req.auth.userId;
     const like = parseInt(req.body.like)
@@ -126,7 +127,7 @@ exports.likePost = (req, res, next) => {
 };
 
 // Delete a post
-exports.deletePost = (req, res, next) => {
+exports.deletePost = (req, res) => {
     // // get userid of the post to delete
     dbQuery("select", { "id": req.params.id })
         .then((response) => {

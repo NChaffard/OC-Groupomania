@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../utils/db');
 
 // -------------------Database Functions-----------------------------------------------
+// queryType accept string, args is an object containing arguments for the query
 async function dbQuery(queryType, args) {
   return await db.dbQuery(queryType, table = 'users', args);
 }
@@ -12,7 +13,7 @@ async function dbQuery(queryType, args) {
 
 
 // Signup
-exports.signup = (req, res, next) => {
+exports.signup = (req, res) => {
   // Hash the password
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
@@ -50,7 +51,7 @@ exports.signup = (req, res, next) => {
 };
 
 // Login
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   // Find user in database with his email
   dbQuery("select", { "email": req.body.email })
     .then((response) => {
@@ -87,7 +88,8 @@ exports.login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 // Get the user
-exports.me = (req, res, next) => {
+exports.me = (req, res) => {
+  ;
   dbQuery("select", { "id": req.auth.userId })
     .then((response) => {
 
@@ -103,29 +105,4 @@ exports.me = (req, res, next) => {
       res.status(400).json({ message: " error: " + error })
     });
 
-}
-// Update
-exports.update = (req, res, next) => {
-
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => {
-      let user = {
-        ...req.body,
-        id: req.auth.userId,
-        password: hash
-      }
-      dbQuery("update", user)
-        .then(() => { res.status(201).json(user) })
-        .catch((error) => { res.status(400).json({ error: error }); })
-    })
-    .catch(error => res.status(500).json({ error }));
-};
-
-// Delete
-exports.delete = (req, res, next) => {
-  dbQuery("delete", { "id": req.auth.userId })
-    .then(() => {
-      res.status(200).json({ message: 'User deleted successfully !' });
-    })
-    .catch((error) => { res.status(400).json({ error: error }) });
 };

@@ -1,28 +1,17 @@
-/**
- * Show an error send by the api
- */
+
+//  Show an error send by the api
+
 export class ApiErrors {
     constructor(errors) {
         this.errors = errors
     }
-
-    get errorsPerField() {
-        return this.errors.reduce((acc, error) => {
-            return { ...acc, [error.field]: error.message }
-        }, {})
-    }
-
 }
 
-
-/**
- * @param {string} endpoint 
- * @param {object} options 
- */
-
+// Accept string for endpoint and an object containing method and/or body for options
 export async function apiFetch(endpoint, options = {}) {
 
     let token = null;
+    // If there is no token in localStorage, set it to empty string
     if (!(token = 'Bearer ' + localStorage.getItem('token'))) {
         token = '';
     }
@@ -35,10 +24,13 @@ export async function apiFetch(endpoint, options = {}) {
         },
         ...options
     })
+    // If there is no content, return null
     if (response.status === 204) {
         return null;
     }
+
     const responseData = await response.json()
+
     if (response.ok) {
         return responseData;
     } else {
