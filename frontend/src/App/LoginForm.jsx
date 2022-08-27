@@ -115,12 +115,12 @@ export function LoginForm({ onConnect }) {
                 <form className="form login-form__form" onSubmit={handleSubmit}>
                     {signupMode === true ? <h2 className="login-form__title login-form__title_on">S'enregistrer</h2> : <h2 className="login-form__title">Se connecter</h2>}
                     {error && <Alert>{error}</Alert>}
-                    <Field onBlur={handleInput} className="login-form-email" error={errorMsg.email} name='email' type='email' id='email' required >Email</Field>
+                    <Field onBlur={handleInput} className="login-form-email" error={errorMsg.email} name='email' type='email' id='email' tabIndex='1' required >Email</Field>
                     {signupMode === true ? <>
-                        <Field onBlur={handleInput} className="login-form-name" error={errorMsg.name} name='name' id='name' required >Nom</Field>
+                        <Field onBlur={handleInput} className="login-form-name" error={errorMsg.name} name='name' id='name' tabIndex='3' required >Nom</Field>
                     </> : null}
 
-                    <Field onBlur={handleInput} className="login-form-password" error={errorMsg.password} name='password' type='password' id='password' required >Mot de passe</Field>
+                    <Field onBlur={handleInput} className="login-form-password" error={errorMsg.password} name='password' type='password' id='password' tabIndex='2' required >Mot de passe</Field>
                     {signupMode === true ? <p className="login-form__tips">Le mot de passe doit contenir au moins 3 caractères, minuscule, majuscule ou chiffre</p> : null}
                     <div className="login-form-submit">
                         <button className={signupMode === true ?

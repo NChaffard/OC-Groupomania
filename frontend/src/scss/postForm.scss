@@ -43,6 +43,12 @@
     }
 
     &-file {
+        position: relative;
+
+        &:focus-within {
+            border: 3px solid;
+        }
+
         &__label {
             font-size: 1.2em;
             display: flex;
@@ -55,10 +61,22 @@
                 cursor: pointer;
                 color: blue;
             }
+
+
         }
 
         &__input {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+
+            &:focus {
+                border: none;
+            }
+
+
         }
 
 
