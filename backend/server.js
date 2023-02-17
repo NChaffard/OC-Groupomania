@@ -54,5 +54,7 @@ const normalizePort = val => {
     console.log('Listening on ' + bind);
   });
   // The server listen the port we have specified
-  server.listen(port);
-  
+  // server.listen(port);
+  server.listen(port, ()=>{
+    console.log('Server is running on port ${port}.');
+  });
