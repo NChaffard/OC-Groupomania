@@ -3,7 +3,7 @@
 ## Backend install
 
 ### `npm install`
-In backend directory, this command install the frontend
+In backend directory, this command install the backend
 
 
 ### `node server`
