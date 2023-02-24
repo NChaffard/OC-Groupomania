@@ -2,6 +2,8 @@
 # Env file
 .env
 
+# DS_Store mac file
+.DS_Store
 # Node
 /node_modules
 
