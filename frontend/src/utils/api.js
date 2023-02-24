@@ -17,7 +17,7 @@ export async function apiFetch(endpoint, options = {}) {
     }
 
 // http://localhost:3333/api
-    const response = await fetch('https://groupomania-backend.herokuapp.com/api' + endpoint, {
+    const response = await fetch('https://groupomania-api.nchaffard.fr:3333/api' + endpoint, {
         headers: {
             'authorization': token,
             'Accept': 'application/json',
