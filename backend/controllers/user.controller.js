@@ -1,15 +1,9 @@
 // Import dependancies
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const mysql = require('mysql');
-const db = require('../utils/db');
+db = require("../models");
+const User = db.users;
 
-// -------------------Database Functions-----------------------------------------------
-// queryType accept string, args is an object containing arguments for the query
-async function dbQuery(queryType, args) {
-  return await db.dbQuery(queryType, table = 'users', args);
-}
-// ----------------Ends of functions---------------------------------------
 
 
 // Signup
@@ -18,32 +12,26 @@ exports.signup = (req, res) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       // Fill the user with req.body and the hash of the password
-      let user = {
-        ...req.body,
+      User.create({
+        name: req.body.name,
+        email: req.body.email,
         password: hash
-      }
-      // Create user in db
-      dbQuery("create", user)
-        .then((response) => {
-          // Then get the user id from response
-          const id = response.insertId;
-          dbQuery("select", { "id": id })
-            .then((response) => {
-              user.name = response[0].name
-              res.status(201).json({
-                userId: id,
-                isAdmin: 0,
-                token: jwt.sign(
-                  {
-                    name: user.name,
-                    userId: id,
-                    isAdmin: 0
-                  },
-                  process.env.TOKEN_SECRET,
-                  { expiresIn: '1h' }
-                )
-              })
-            })
+      })
+        .then((data) => {
+          res.status(201).json({
+            userId: data.dataValues.id,
+            name: data.dataValues.name,
+            isAdmin: data.dataValues.isAdmin,
+            token: jwt.sign(
+              {
+                name: data.dataValues.name,
+                userId: data.dataValues.id,
+                isAdmin: data.dataValues.isAdmin
+              },
+              process.env.TOKEN_SECRET,
+              { expiresIn: '24h' }
+            )
+          });
         })
         .catch(() => { res.status(400).json({ error: "L'utilisateur existe déja !!" }) });
     })
@@ -53,13 +41,14 @@ exports.signup = (req, res) => {
 // Login
 exports.login = (req, res) => {
   // Find user in database with his email
-  dbQuery("select", { "email": req.body.email })
+  // dbQuery("select", { "email": req.body.email })
+  User.findOne({ where: { email: req.body.email } })
     .then((response) => {
       if (response == '') {
         res.status(400).json({ error: "L'email n'existe pas!!" })
       }
       else {
-        const user = response[0];
+        const user = response;
         // Then compare password from user with password from database
         bcrypt.compare(req.body.password, user.password)
           .then(valid => {
@@ -89,16 +78,12 @@ exports.login = (req, res) => {
 };
 // Get the user
 exports.me = (req, res) => {
-  ;
-  dbQuery("select", { "id": req.auth.userId })
+
+  User.findByPk(req.auth.userId)
     .then((response) => {
 
-      delete response[0].password
-      delete response[0].isAdmin
-      let user = {
-        ...response[0]
-      }
-      res.status(200).json(user)
+      delete response.dataValues.password
+      res.status(200).json(response)
 
     })
     .catch((error) => {

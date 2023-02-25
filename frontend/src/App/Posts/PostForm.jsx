@@ -136,9 +136,7 @@ function PostForm({ post = null, onSubmit }) {
         {/* If it is a post update, get the data from post */}
         {post ? <>
             <input type="hidden" name="id" id="id" value={post.id} />
-            <input type="hidden" name="created_at" id="created_at" value={post.created_at} />
-            <input type="hidden" name="likes" id="likes" value={post.likes} />
-            <input type="hidden" name="name" id="name" value={post.name} />
+            <input type="hidden" name="name" id="name" value={post.user.name} />
             <input type="hidden" name="userId" id="userId" value={post.userId} />
         </> : null}
         {/* If there is a previous image, get the url */}

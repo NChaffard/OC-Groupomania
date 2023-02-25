@@ -37,8 +37,7 @@ export function Site() {
         resetPosts,
         deletePost,
         createPost,
-        updatePost,
-        likePost
+        updatePost
     } = usePosts()
 
     // UseEffects
@@ -106,7 +105,7 @@ export function Site() {
                     }>
                     </Route>
                     <Route exact path='/' element={
-                        <Posts posts={posts} onDelete={deletePost} onUpdate={setPost} onLike={likePost} />
+                        <Posts posts={posts} onDelete={deletePost} onUpdate={setPost} />
                     }>
                     </Route>
                 </Routes>

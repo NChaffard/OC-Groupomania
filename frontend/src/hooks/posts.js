@@ -68,15 +68,6 @@ export function usePosts() {
                 body: post
             })
             dispatch({ type: 'UPDATE_POST', payload: newPost })
-        },
-        likePost: async function (post, like) {
-            const data = new FormData()
-            data.append('like', like)
-            const newPost = await apiFetch('/post/' + post.id + '/like', {
-                method: 'PUT',
-                body: data
-            })
-            dispatch({ type: 'UPDATE_POST', payload: newPost })
         }
     }
 }
