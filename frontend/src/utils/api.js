@@ -16,11 +16,12 @@ export async function apiFetch(endpoint, options = {}) {
         token = '';
     }
 
-
-    const response = await fetch('http://localhost:3333/api' + endpoint, {
+    // http://localhost:3333/api
+    const response = await fetch('http://api.groupomania.nchaffard.fr/api' + endpoint, {
         headers: {
             'authorization': token,
             'Accept': 'application/json',
+           
         },
         ...options
     })
