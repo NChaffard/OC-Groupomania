@@ -4,7 +4,7 @@
 ## Backend install
 
 ### `npm install`
-In backend directory, this command install the backend
+In backend directory, this command install the frontend
 
 
 ### `node server`
@@ -14,33 +14,28 @@ Start the server
 make a .env file in backend folder then fill it with the parameters below
 
 
-### DotEnv content
+#### DotEnv content
 
-#### Port for the backend app
-PORT = ''
+- Port for the backend app
+    - PORT = 
 
-#### Origin request adress from frontend
-ORIGIN_REQ_ADDRESS = ''
+- Origin request adress from frontend
+    - ORIGIN_REQ_ADDRESS = 
 
-#### Token salt for JWT
-TOKEN_SECRET = ''
+- Token salt for JWT
+    - TOKEN_SECRET = 
 
-#### Admin user
-ADMIN_USER = ''
-ADMIN_EMAIL = ''
-ADMIN_PASSWORD = ''
+- Database host
+    - DB_HOST = 
 
-#### Database host
-DB_HOST = ''
+- Database user
+    - DB_USER =
 
-#### Database user
-DB_USER = ''
+- Database password
+    - DB_PASSWORD = 
 
-#### Database password
-DB_PASSWORD = ''
-
-#### Database name
-DB_DATABASE = ''
+- Database name
+    - DB_DATABASE =
 
 
 
